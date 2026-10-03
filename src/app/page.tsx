@@ -3,12 +3,7 @@
 import { useEffect, useState } from 'react';
 import { ArrowUpRight, Check, ChevronDown, Instagram, MapPin, Menu, Phone, Sparkles, X } from 'lucide-react';
 import ContactForm from '@/components/ContactForm';
-import { INITIAL_PUBLIC_CONTENT, PublicSiteContent } from '@/lib/dataStore';
-
-function normalizeImageUrl(url: string) {
-  const driveMatch = url.match(/^https:\/\/drive\.google\.com\/uc\?export=view&id=(.+)$/);
-  return driveMatch ? `https://drive.usercontent.google.com/download?id=${driveMatch[1]}&export=view` : url;
-}
+import { INITIAL_PUBLIC_CONTENT, normalizeImageUrl, PublicSiteContent } from '@/lib/dataStore';
 
 export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -17,13 +12,22 @@ export default function HomePage() {
 
   useEffect(() => {
     const loadContent = () => {
+      const stored = typeof window !== 'undefined' ? localStorage.getItem('elshadai_public_content') : null;
+      if (stored) {
+        try {
+          setContent({ ...INITIAL_PUBLIC_CONTENT, ...JSON.parse(stored) });
+        } catch { /* use current */ }
+      }
       void fetch('/api/site?action=content', { cache: 'no-store' })
         .then(response => response.json())
-        .then(data => { if (data.content) setContent({ ...INITIAL_PUBLIC_CONTENT, ...data.content }); })
-        .catch(() => {
-          const stored = localStorage.getItem('elshadai_public_content');
-          if (stored) setContent({ ...INITIAL_PUBLIC_CONTENT, ...JSON.parse(stored) });
-        });
+        .then(data => {
+          if (data.content) {
+            const merged = { ...INITIAL_PUBLIC_CONTENT, ...data.content };
+            setContent(merged);
+            localStorage.setItem('elshadai_public_content', JSON.stringify(merged));
+          }
+        })
+        .catch(() => {});
     };
     loadContent();
     window.addEventListener('storage', loadContent);
@@ -49,7 +53,7 @@ export default function HomePage() {
         <div className="header-actions"><button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">{menuOpen ? <X /> : <Menu />}</button></div>
       </header>
 
-      <section className="hero" id="top"><div className="hero-copy"><p className="eyebrow"><span /> {content.heroEyebrow}</p><h1>{content.heroTitle}<br /><em>{content.heroEmphasis}</em></h1><p className="hero-intro">{content.heroIntro}</p><div className="hero-actions"><a className="button button-dark" href="#contact">Start a conversation <ArrowUpRight size={17} /></a><a className="text-link" href="#collections">Explore collections <ChevronDown size={16} /></a></div><div className="hero-note"><Sparkles size={16} /> {content.heroNote}</div></div><div className="hero-image-wrap">{heroImages.map((image, index) => <img key={`${image}-${index}`} className={`hero-image ${index === heroIndex % heroImages.length ? 'is-active' : ''}`} src={image} onError={event => { event.currentTarget.src = INITIAL_PUBLIC_CONTENT.heroImages[index % INITIAL_PUBLIC_CONTENT.heroImages.length]; }} alt="Warm, layered living room with curtains and a sofa" />)}<div className="hero-caption"><span>{String((heroIndex % heroImages.length) + 1).padStart(2, '0')} / {String(heroImages.length).padStart(2, '0')}</span><span>Living beautifully, daily</span></div><div className="hero-dots">{heroImages.map((image, index) => <button key={image} className={index === heroIndex % heroImages.length ? 'is-active' : ''} onClick={() => setHeroIndex(index)} aria-label={`Show image ${index + 1}`} />)}</div></div></section>
+      <section className="hero" id="top"><div className="hero-copy"><p className="eyebrow"><span /> {content.heroEyebrow}</p><h1>{content.heroTitle}<br /><em>{content.heroEmphasis}</em></h1><p className="hero-intro">{content.heroIntro}</p><div className="hero-actions"><a className="button button-dark" href="#contact">Start a conversation <ArrowUpRight size={17} /></a><a className="text-link" href="#collections">Explore collections <ChevronDown size={16} /></a></div><div className="hero-note"><Sparkles size={16} /> {content.heroNote}</div></div><div className="hero-image-wrap">{heroImages.map((image, index) => <img key={`${image}-${index}`} className={`hero-image ${index === heroIndex % heroImages.length ? 'is-active' : ''}`} src={image} onError={event => { const fallback = INITIAL_PUBLIC_CONTENT.heroImages[index % INITIAL_PUBLIC_CONTENT.heroImages.length]; if (event.currentTarget.src !== fallback) event.currentTarget.src = fallback; }} alt="Warm, layered living room with curtains and a sofa" />)}<div className="hero-caption"><span>{String((heroIndex % heroImages.length) + 1).padStart(2, '0')} / {String(heroImages.length).padStart(2, '0')}</span><span>Living beautifully, daily</span></div><div className="hero-dots">{heroImages.map((image, index) => <button key={image} className={index === heroIndex % heroImages.length ? 'is-active' : ''} onClick={() => setHeroIndex(index)} aria-label={`Show image ${index + 1}`} />)}</div></div></section>
 
       <section className="trust-strip">{content.trustItems.map(item => <span key={item}>{item}</span>)}</section>
 

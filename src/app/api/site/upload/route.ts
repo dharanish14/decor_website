@@ -18,6 +18,12 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({ action: 'uploadImage', name: file.name, mimeType: file.type, data: bytes.toString('base64') }),
     });
     const data = await response.json();
+    if (data && typeof data === 'object') {
+      const fileId = data.fileId || (data.url ? data.url.match(/(?:id=|\/d\/|\/file\/d\/)([a-zA-Z0-9_-]{25,})/)?.[1] : null);
+      if (fileId) {
+        data.url = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`;
+      }
+    }
     return NextResponse.json(data, { status: response.ok ? 200 : 502 });
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : 'Image upload failed' }, { status: 502 });

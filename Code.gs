@@ -110,7 +110,7 @@ function doPost(event) {
       const blob = Utilities.newBlob(Utilities.base64Decode(data.data), data.mimeType, data.name);
       const file = folder.createFile(blob);
       file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-      return json_({ success: true, url: 'https://drive.usercontent.google.com/download?id=' + file.getId() + '&export=view', fileId: file.getId() });
+      return json_({ success: true, url: 'https://drive.google.com/thumbnail?id=' + file.getId() + '&sz=w1600', fileId: file.getId() });
     }
     if (data.action === 'updateLead' || data.action === 'deleteLead') {
       const sheet = leadsSheet_();

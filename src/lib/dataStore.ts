@@ -1,3 +1,12 @@
+export function normalizeImageUrl(url: string | undefined | null): string {
+  if (!url) return '';
+  const driveMatch = url.match(/(?:id=|\/d\/|\/file\/d\/)([a-zA-Z0-9_-]{25,})/);
+  if (driveMatch && driveMatch[1]) {
+    return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w1600`;
+  }
+  return url;
+}
+
 export interface PastWork {
   id: string;
   title: string;
