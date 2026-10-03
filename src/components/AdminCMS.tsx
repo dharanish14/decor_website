@@ -128,7 +128,9 @@ export default function AdminCMS() {
       const data = await response.json();
       if (!response.ok || !data.url) { notify(data.error || 'Upload failed'); return; }
       onUploaded(data.url);
-      notify(`${file.name} processed and saved`);
+      await new Promise(resolve => window.setTimeout(resolve, 50));
+      await publish();
+      notify(`${file.name} processed, saved, and published`);
     } finally {
       setBusy('');
     }
