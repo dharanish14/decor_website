@@ -127,20 +127,18 @@ function doPost(event) {
     if (data.name && data.email && data.phone) {
       leadsSheet_().appendRow(LEAD_HEADERS.map(header => data[header] || ''));
       try {
-        const ownerEmail = Session.getActiveUser().getEmail();
-        if (ownerEmail) {
-          MailApp.sendEmail({
-            to: ownerEmail,
-            subject: '🔔 New Website Enquiry: ' + data.name + ' (' + data.phone + ')',
-            body: 'New Enquiry Received on Elshadai Decors Website!\n\n' +
-                  '• Name: ' + data.name + '\n' +
-                  '• Phone: ' + data.phone + '\n' +
-                  '• Email: ' + data.email + '\n' +
-                  '• Service Needed: ' + (data.serviceType || 'General') + '\n' +
-                  '• Message: ' + (data.message || 'No additional details') + '\n\n' +
-                  'Date: ' + new Date().toLocaleString()
-          });
-        }
+        const targetEmail = data.adminNotificationEmail || 'dharaanish@gmail.com';
+        MailApp.sendEmail({
+          to: targetEmail,
+          subject: '🔔 New Website Enquiry: ' + data.name + ' (' + data.phone + ')',
+          body: 'New Enquiry Received on Elshadai Decors Website!\n\n' +
+                '• Name: ' + data.name + '\n' +
+                '• Phone: ' + data.phone + '\n' +
+                '• Email: ' + data.email + '\n' +
+                '• Service Needed: ' + (data.serviceType || 'General') + '\n' +
+                '• Message: ' + (data.message || 'No additional details') + '\n\n' +
+                'Date: ' + new Date().toLocaleString()
+        });
       } catch (e) { /* ignore email error */ }
       return json_({ success: true });
     }

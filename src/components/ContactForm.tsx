@@ -12,6 +12,7 @@ export default function ContactForm() {
   const [error, setError] = useState('');
   const [waUrl, setWaUrl] = useState('');
   const [contactPhone, setContactPhone] = useState('+91 98400 12345');
+  const [adminNotificationEmail, setAdminNotificationEmail] = useState('dharaanish@gmail.com');
 
   useEffect(() => {
     const stored = typeof window !== 'undefined' ? localStorage.getItem('elshadai_public_content') : null;
@@ -19,6 +20,7 @@ export default function ContactForm() {
       try {
         const parsed: PublicSiteContent = JSON.parse(stored);
         if (parsed.contactPhone) setContactPhone(parsed.contactPhone);
+        if (parsed.adminNotificationEmail) setAdminNotificationEmail(parsed.adminNotificationEmail);
       } catch { /* use default */ }
     }
   }, []);
@@ -39,9 +41,10 @@ export default function ContactForm() {
       message: String(data.get('message') || ''),
       createdAt: new Date().toISOString(),
       status: 'Pending' as const,
+      adminNotificationEmail: adminNotificationEmail || 'dharaanish@gmail.com',
     };
 
-    // Format WhatsApp alert link
+    // Format optional WhatsApp alert link
     const cleanDigits = (contactPhone || '+91 98400 12345').replace(/[^0-9]/g, '');
     const fullWaPhone = cleanDigits.length === 10 ? `91${cleanDigits}` : cleanDigits;
     const waText = `*New Website Enquiry - Elshadai Decors*\n\n👤 *Name:* ${lead.name}\n📞 *Phone:* ${lead.phone}\n📧 *Email:* ${lead.email}\n🛋️ *Looking for:* ${lead.serviceType}\n💬 *Details:* ${lead.message || 'No additional details'}`;
@@ -64,11 +67,6 @@ export default function ContactForm() {
 
     setLoading(false);
     setSent(true);
-
-    // Auto open WhatsApp in new tab for direct notification
-    if (typeof window !== 'undefined' && generatedWaUrl) {
-      window.open(generatedWaUrl, '_blank', 'noopener,noreferrer');
-    }
   }
 
   return (
