@@ -82,6 +82,9 @@ export interface PublicSiteContent {
   address: string;
   contactPhone: string;
   adminNotificationEmail: string;
+  smtpUser?: string;
+  smtpPass?: string;
+  resendApiKey?: string;
   instagramUrl: string;
   justdialUrl: string;
   effects: {
@@ -132,6 +135,8 @@ export const INITIAL_PUBLIC_CONTENT: PublicSiteContent = {
   address: 'Elshadai Decors\nNear MGR Statue, opposite Pillayar Kovil\nK.K. Nagar, Chennai',
   contactPhone: '+91 98400 12345',
   adminNotificationEmail: 'dharaanish@gmail.com',
+  smtpUser: 'monovawebsite@gmail.com',
+  smtpPass: '',
   instagramUrl: 'https://www.instagram.com/elshadai_decors/',
   justdialUrl: 'https://www.justdial.com/Chennai/Elshadai-Decors-Near-Mgr-Statue-Opp-to-Pillayar-Kovil-K-K-Nagar/044PXX44-XX44-091119153916-B3B2_BZDET',
   effects: { revealOnScroll: true, imageHoverZoom: true, floatingAccent: true },

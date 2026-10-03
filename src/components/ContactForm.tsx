@@ -13,6 +13,9 @@ export default function ContactForm() {
   const [waUrl, setWaUrl] = useState('');
   const [contactPhone, setContactPhone] = useState('+91 98400 12345');
   const [adminNotificationEmail, setAdminNotificationEmail] = useState('dharaanish@gmail.com');
+  const [smtpUser, setSmtpUser] = useState('monovawebsite@gmail.com');
+  const [smtpPass, setSmtpPass] = useState('');
+  const [resendApiKey, setResendApiKey] = useState('');
 
   useEffect(() => {
     const stored = typeof window !== 'undefined' ? localStorage.getItem('elshadai_public_content') : null;
@@ -21,6 +24,9 @@ export default function ContactForm() {
         const parsed: PublicSiteContent = JSON.parse(stored);
         if (parsed.contactPhone) setContactPhone(parsed.contactPhone);
         if (parsed.adminNotificationEmail) setAdminNotificationEmail(parsed.adminNotificationEmail);
+        if (parsed.smtpUser) setSmtpUser(parsed.smtpUser);
+        if (parsed.smtpPass) setSmtpPass(parsed.smtpPass);
+        if (parsed.resendApiKey) setResendApiKey(parsed.resendApiKey);
       } catch { /* use default */ }
     }
   }, []);
@@ -42,6 +48,9 @@ export default function ContactForm() {
       createdAt: new Date().toISOString(),
       status: 'Pending' as const,
       adminNotificationEmail: adminNotificationEmail || 'dharaanish@gmail.com',
+      smtpUser: smtpUser || 'monovawebsite@gmail.com',
+      smtpPass: smtpPass || '',
+      resendApiKey: resendApiKey || '',
     };
 
     // Format optional WhatsApp alert link
