@@ -87,6 +87,8 @@ export interface PublicSiteContent {
   resendApiKey?: string;
   formServiceLabel?: string;
   formServiceOptions?: string[];
+  adminUsername?: string;
+  adminPassword?: string;
   instagramUrl: string;
   justdialUrl: string;
   effects: {
@@ -141,6 +143,8 @@ export const INITIAL_PUBLIC_CONTENT: PublicSiteContent = {
   smtpPass: '',
   formServiceLabel: 'What are you looking for?',
   formServiceOptions: ['Curtains', 'Blinds & shades', 'Sofa or upholstery', 'Full room refresh', 'Not sure yet'],
+  adminUsername: 'admin@elshadai',
+  adminPassword: 'change-me-now',
   instagramUrl: 'https://www.instagram.com/elshadai_decors/',
   justdialUrl: 'https://www.justdial.com/Chennai/Elshadai-Decors-Near-Mgr-Statue-Opp-to-Pillayar-Kovil-K-K-Nagar/044PXX44-XX44-091119153916-B3B2_BZDET',
   effects: { revealOnScroll: true, imageHoverZoom: true, floatingAccent: true },

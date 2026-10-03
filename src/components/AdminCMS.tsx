@@ -1,7 +1,7 @@
 'use client';
 
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { Check, Download, ImagePlus, LogOut, Plus, Save, Settings, Trash2, Upload, UserRound } from 'lucide-react';
+import { Check, Download, ImagePlus, Lock, LogOut, Plus, Save, Settings, ShieldAlert, Trash2, Unlock, Upload, UserRound } from 'lucide-react';
 import { exportLeadsToExcel } from '@/lib/excelExport';
 import { INITIAL_PUBLIC_CONTENT, LeadSubmission, normalizeImageUrl, PublicSiteContent } from '@/lib/dataStore';
 
@@ -73,8 +73,15 @@ export default function AdminCMS() {
             merged.heroTitle = INITIAL_PUBLIC_CONTENT.heroTitle;
             merged.heroEmphasis = INITIAL_PUBLIC_CONTENT.heroEmphasis;
           }
+          const savedUser = merged.adminUsername || localStorage.getItem('elshadai_admin_username') || 'admin@elshadai';
+          const savedPass = merged.adminPassword || localStorage.getItem('elshadai_admin_password') || 'change-me-now';
+          merged.adminUsername = savedUser;
+          merged.adminPassword = savedPass;
+
           setContent(merged);
           localStorage.setItem('elshadai_public_content', JSON.stringify(merged));
+          localStorage.setItem('elshadai_admin_username', savedUser);
+          localStorage.setItem('elshadai_admin_password', savedPass);
         }
         remoteContentLoaded = true;
       }
@@ -116,6 +123,9 @@ export default function AdminCMS() {
         return;
       }
       localStorage.setItem('elshadai_public_content', JSON.stringify(targetContent));
+      if (targetContent.adminUsername) localStorage.setItem('elshadai_admin_username', targetContent.adminUsername);
+      if (targetContent.adminPassword) localStorage.setItem('elshadai_admin_password', targetContent.adminPassword);
+
       notify('Published to Google Sheets & updated website');
       window.dispatchEvent(new Event('storage'));
     } catch {
@@ -184,19 +194,160 @@ export default function AdminCMS() {
 
   function login(event: FormEvent) {
     event.preventDefault();
-    if (username === 'admin@elshadai' && password === 'change-me-now') {
+    const validUsername = content.adminUsername || localStorage.getItem('elshadai_admin_username') || 'admin@elshadai';
+    const validPassword = content.adminPassword || localStorage.getItem('elshadai_admin_password') || 'change-me-now';
+
+    if (username === validUsername && password === validPassword) {
       sessionStorage.setItem('elshadai_admin_authed', 'true');
       setAuthenticated(true);
-    } else setLoginError('Invalid login. Change the starter credentials before launch.');
+    } else {
+      setLoginError('Invalid login username or password.');
+    }
   }
 
-  if (!authenticated) return <main className="admin-login"><div className="admin-login-art"><div className="admin-login-art-copy"><span className="admin-kicker">ELSHADAI / PRIVATE STUDIO</span><h1>Make every<br /><em>room matter.</em></h1><p>Shape the public experience, keep your collection fresh, and follow every enquiry from one quiet control room.</p><div className="admin-login-rule" /></div></div><form onSubmit={login} className="admin-login-form"><div className="admin-login-badge"><Settings size={20} /></div><span className="admin-kicker">WELCOME BACK</span><h2>Control room</h2><p className="admin-login-subtitle">Manage your website, content, images, and enquiries.</p>{loginError && <p className="admin-login-error">{loginError}</p>}<label>Username<input className={fieldClass} placeholder="admin@elshadai" value={username} onChange={event => setUsername(event.target.value)} required /></label><label>Password<input className={fieldClass} type="password" placeholder="Your password" value={password} onChange={event => setPassword(event.target.value)} required /></label><button className="admin-login-submit">Open admin panel <span>↗</span></button><small>Private workspace · Google Sheets + Drive connected</small></form></main>;
+  if (!authenticated) return (
+    <main className="admin-login">
+      <div className="admin-login-art">
+        <div className="admin-login-art-copy">
+          <span className="admin-kicker">ELSHADAI / PRIVATE STUDIO</span>
+          <h1>Make every<br /><em>room matter.</em></h1>
+          <p>Shape the public experience, keep your collection fresh, and follow every enquiry from one quiet control room.</p>
+          <div className="admin-login-rule" />
+        </div>
+      </div>
+      <form onSubmit={login} className="admin-login-form">
+        <div className="admin-login-badge"><Settings size={20} /></div>
+        <span className="admin-kicker">WELCOME BACK</span>
+        <h2>Control room</h2>
+        <p className="admin-login-subtitle">Manage your website, content, images, and enquiries.</p>
+        {loginError && <p className="admin-login-error">{loginError}</p>}
+        <label>Username<input className={fieldClass} placeholder="admin@elshadai" value={username} onChange={event => setUsername(event.target.value)} required /></label>
+        <label>Password<input className={fieldClass} type="password" placeholder="Your password" value={password} onChange={event => setPassword(event.target.value)} required /></label>
+        <button className="admin-login-submit">Open admin panel <span>↗</span></button>
+        <small>Private workspace · Google Sheets + Drive connected</small>
+      </form>
+    </main>
+  );
 
-  return <main className="min-h-screen bg-[#f5f2ec] p-4 text-[#25302c] sm:p-8"><div className="mx-auto max-w-7xl"><header className="mb-7 flex flex-wrap items-center justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-[#c8714d]">ELSHADAI DECORS</p><h1 className="font-serif text-4xl">Control room</h1><p className="mt-1 text-sm text-[#6c756e]">{scriptReady ? 'Connected to Google Sheets and Google Drive' : 'Connect the Apps Script URL before publishing'}</p></div><div className="flex gap-2"><button onClick={() => void publish()} className="flex items-center gap-2 bg-[#25302c] px-4 py-2.5 text-xs font-bold uppercase text-white"><Save size={15} /> Publish</button><button onClick={() => { sessionStorage.removeItem('elshadai_admin_authed'); setAuthenticated(false); }} className="flex items-center gap-2 border border-[#d8d4ca] px-4 py-2.5 text-xs font-bold uppercase"><LogOut size={15} /> Log out</button></div></header>{notice && <div className="fixed right-5 top-5 z-50 flex items-center gap-2 bg-[#25302c] px-4 py-3 text-sm text-white shadow-xl"><Check size={16} /> {notice}</div>}<nav className="mb-7 flex gap-2 overflow-auto border-b border-[#d8d4ca] pb-3">{([['leads', 'Enquiries', UserRound], ['content', 'Page content', ImagePlus], ['settings', 'Settings', Settings]] as const).map(([key, label, Icon]) => <button key={key} onClick={() => setTab(key)} className={`flex items-center gap-2 whitespace-nowrap px-4 py-2 text-xs font-bold uppercase tracking-wider ${tab === key ? 'bg-[#25302c] text-white' : 'bg-white text-[#6c756e]'}`}><Icon size={15} /> {label}{key === 'leads' ? ` (${leads.length})` : ''}</button>)}</nav>{tab === 'leads' && <LeadsTab leads={leads} updateLead={updateLead} deleteLead={deleteLead} notify={notify} />}{tab === 'content' && <ContentTab content={content} setField={setField} updateCollection={updateCollection} updateProject={updateProject} uploadImage={uploadImage} publish={publish} />}{tab === 'settings' && <SettingsTab content={content} setField={setField} />}</div></main>;
+  return (
+    <main className="min-h-screen bg-[#f5f2ec] p-4 text-[#25302c] sm:p-8">
+      <div className="mx-auto max-w-7xl">
+        <header className="mb-7 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[.2em] text-[#c8714d]">ELSHADAI DECORS</p>
+            <h1 className="font-serif text-4xl">Control room</h1>
+            <p className="mt-1 text-sm text-[#6c756e]">{scriptReady ? 'Connected to Google Sheets and Google Drive' : 'Connect the Apps Script URL before publishing'}</p>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={() => void publish()} className="flex items-center gap-2 bg-[#25302c] px-4 py-2.5 text-xs font-bold uppercase text-white"><Save size={15} /> Save & Publish</button>
+            <button onClick={() => { sessionStorage.removeItem('elshadai_admin_authed'); setAuthenticated(false); }} className="flex items-center gap-2 border border-[#d8d4ca] px-4 py-2.5 text-xs font-bold uppercase"><LogOut size={15} /> Log out</button>
+          </div>
+        </header>
+        {notice && <div className="fixed right-5 top-5 z-50 flex items-center gap-2 bg-[#25302c] px-4 py-3 text-sm text-white shadow-xl"><Check size={16} /> {notice}</div>}
+        <nav className="mb-7 flex gap-2 overflow-auto border-b border-[#d8d4ca] pb-3">
+          {([['leads', 'Enquiries', UserRound], ['content', 'Page content', ImagePlus], ['settings', 'Settings & Security', Settings]] as const).map(([key, label, Icon]) => (
+            <button key={key} onClick={() => setTab(key)} className={`flex items-center gap-2 whitespace-nowrap px-4 py-2 text-xs font-bold uppercase tracking-wider ${tab === key ? 'bg-[#25302c] text-white' : 'bg-white text-[#6c756e]'}`}>
+              <Icon size={15} /> {label}{key === 'leads' ? ` (${leads.length})` : ''}
+            </button>
+          ))}
+        </nav>
+        {tab === 'leads' && <LeadsTab leads={leads} updateLead={updateLead} deleteLead={deleteLead} notify={notify} />}
+        {tab === 'content' && <ContentTab content={content} setField={setField} updateCollection={updateCollection} updateProject={updateProject} uploadImage={uploadImage} publish={publish} />}
+        {tab === 'settings' && <SettingsTab content={content} setField={setField} />}
+      </div>
+    </main>
+  );
+}
+
+function ProtectedSection({ title, description, currentPassword, children }: { title: string; description: string; currentPassword: string; children: React.ReactNode }) {
+  const [unlocked, setUnlocked] = useState(false);
+  const [passInput, setPassInput] = useState('');
+  const [error, setError] = useState('');
+
+  const handleUnlock = (e: FormEvent) => {
+    e.preventDefault();
+    if (passInput === currentPassword) {
+      setUnlocked(true);
+      setError('');
+      setPassInput('');
+    } else {
+      setError('Incorrect current password. Access denied.');
+    }
+  };
+
+  return (
+    <div className="bg-white p-5 border-l-4 border-[#c8714d] shadow-sm rounded-lg">
+      <div className="flex items-center justify-between gap-3 mb-1">
+        <h3 className="font-serif text-2xl text-[#25302c] flex items-center gap-2">
+          {title}
+        </h3>
+        {unlocked && (
+          <button type="button" onClick={() => setUnlocked(false)} className="flex items-center gap-1 text-xs bg-[#ebe5da] hover:bg-[#d8d4ca] px-3 py-1 text-[#25302c] font-bold uppercase tracking-wider rounded">
+            <Lock size={13} /> Lock Section
+          </button>
+        )}
+      </div>
+      <p className="mb-4 text-xs text-[#6c756e]">{description}</p>
+
+      {!unlocked ? (
+        <form onSubmit={handleUnlock} className="bg-[#faf8f5] p-4 rounded-lg border border-[#e5e0d8] space-y-3">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase text-[#c8714d]">
+            <ShieldAlert size={16} /> Security Password Verification Required
+          </div>
+          <p className="text-xs text-[#6c756e]">
+            Enter your current Admin Password to edit these sensitive settings.
+          </p>
+          {error && <p className="text-xs text-red-600 font-bold">{error}</p>}
+          <div className="flex gap-2 max-w-md">
+            <input type="password" className={fieldClass} placeholder="Enter current admin password" value={passInput} onChange={e => setPassInput(e.target.value)} required />
+            <button type="submit" className="bg-[#25302c] text-white text-xs px-4 py-2 font-bold uppercase whitespace-nowrap flex items-center gap-1 rounded-lg">
+              <Unlock size={14} /> Unlock
+            </button>
+          </div>
+        </form>
+      ) : (
+        <div className="space-y-4">
+          <div className="bg-[#f0f9ff] border border-[#b9e6fe] p-2.5 text-xs text-[#026aa2] rounded flex items-center gap-2">
+            <Check size={15} /> Section unlocked for editing. Click <b>"Save & Publish"</b> above when done.
+          </div>
+          {children}
+        </div>
+      )}
+    </div>
+  );
 }
 
 function LeadsTab({ leads, updateLead, deleteLead, notify }: { leads: LeadSubmission[]; updateLead: (id: string, patch: Partial<LeadSubmission>) => Promise<void>; deleteLead: (id: string) => Promise<void>; notify: (message: string) => void }) {
-  return <section><div className="mb-5 flex flex-wrap justify-between gap-3"><div><h2 className="font-serif text-3xl">Customer enquiries</h2><p className="text-sm text-[#6c756e]">Stored in Google Sheets and available from any device.</p></div><button onClick={() => { exportLeadsToExcel(leads); notify('Excel file downloaded'); }} className="flex items-center gap-2 bg-[#c8714d] px-3 py-2 text-xs font-bold uppercase text-white"><Download size={14} /> Excel</button></div><div className="grid gap-4">{leads.length === 0 ? <div className="bg-white p-8 text-center text-sm text-[#6c756e]">No enquiries yet.</div> : leads.map(lead => <article key={lead.id} className="bg-white p-5 shadow-sm"><div className="flex justify-between gap-3"><div><h3 className="font-serif text-2xl">{lead.name}</h3><p className="text-sm text-[#6c756e]">{lead.email} · {lead.phone}</p></div><button onClick={() => deleteLead(lead.id)} className="text-[#c8714d]" aria-label={`Delete ${lead.name}`}><Trash2 size={18} /></button></div><p className="mt-4 text-sm"><b>{lead.serviceType}</b> · {lead.message || 'No additional details.'}</p><div className="mt-4 flex flex-wrap gap-2 border-t border-[#eeeae2] pt-3">{(['Pending', 'Contacted', 'Quoted', 'Completed'] as LeadSubmission['status'][]).map(status => <button key={status} onClick={() => updateLead(lead.id, { status })} className={`px-3 py-1 text-xs ${lead.status === status ? 'bg-[#25302c] text-white' : 'bg-[#ebe5da] text-[#6c756e]'}`}>{status}</button>)}</div></article>)}</div></section>;
+  return (
+    <section>
+      <div className="mb-5 flex flex-wrap justify-between gap-3">
+        <div>
+          <h2 className="font-serif text-3xl">Customer enquiries</h2>
+          <p className="text-sm text-[#6c756e]">Stored in Google Sheets and available from any device.</p>
+        </div>
+        <button onClick={() => { exportLeadsToExcel(leads); notify('Excel file downloaded'); }} className="flex items-center gap-2 bg-[#c8714d] px-3 py-2 text-xs font-bold uppercase text-white"><Download size={14} /> Excel</button>
+      </div>
+      <div className="grid gap-4">
+        {leads.length === 0 ? <div className="bg-white p-8 text-center text-sm text-[#6c756e]">No enquiries yet.</div> : leads.map(lead => (
+          <article key={lead.id} className="bg-white p-5 shadow-sm">
+            <div className="flex justify-between gap-3">
+              <div>
+                <h3 className="font-serif text-2xl">{lead.name}</h3>
+                <p className="text-sm text-[#6c756e]">{lead.email} · {lead.phone}</p>
+              </div>
+              <button onClick={() => deleteLead(lead.id)} className="text-[#c8714d]" aria-label={`Delete ${lead.name}`}><Trash2 size={18} /></button>
+            </div>
+            <p className="mt-4 text-sm"><b>{lead.serviceType}</b> · {lead.message || 'No additional details.'}</p>
+            <div className="mt-4 flex flex-wrap gap-2 border-t border-[#eeeae2] pt-3">
+              {(['Pending', 'Contacted', 'Quoted', 'Completed'] as LeadSubmission['status'][]).map(status => (
+                <button key={status} onClick={() => updateLead(lead.id, { status })} className={`px-3 py-1 text-xs ${lead.status === status ? 'bg-[#25302c] text-white' : 'bg-[#ebe5da] text-[#6c756e]'}`}>{status}</button>
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 function ContentTab({ content, setField, updateCollection, updateProject, uploadImage, publish }: { content: PublicSiteContent; setField: <K extends keyof PublicSiteContent>(key: K, value: PublicSiteContent[K]) => void; updateCollection: (index: number, patch: Partial<PublicSiteContent['collections'][number]>) => void; updateProject: (index: number, patch: Partial<PublicSiteContent['projects'][number]>) => void; uploadImage: (event: ChangeEvent<HTMLInputElement>, onUploaded: (url: string) => PublicSiteContent) => Promise<void>; publish: (next?: PublicSiteContent) => Promise<void> }) {
@@ -223,10 +374,165 @@ function ContentTab({ content, setField, updateCollection, updateProject, upload
     </div>
   );
 
-  return <section className="space-y-6"><div><h2 className="font-serif text-3xl">Page content</h2><p className="text-sm text-[#6c756e]">Every image upload is stored in your Google Drive folder.</p></div><div className="bg-white p-5 border-l-4 border-[#c8714d]"><h3 className="mb-1 font-serif text-2xl text-[#25302c]">🔔 Automated HTML Email Alert Settings</h3><p className="mb-4 text-xs text-[#6c756e]">Enter your Resend API key OR Gmail App Password below to send automatic, formatted HTML emails whenever an enquiry is submitted.</p><div className="grid gap-4 sm:grid-cols-2">{text('Alert Recipient Emails (Comma separated)', content.adminNotificationEmail || 'dharaanish@gmail.com, monovawebsite@gmail.com', value => setField('adminNotificationEmail', value))}{text('Resend API Key (re_...)', content.resendApiKey || '', value => setField('resendApiKey', value))}{text('Sender Gmail Address', content.smtpUser || 'monovawebsite@gmail.com', value => setField('smtpUser', value))}{text('Sender Gmail App Password (16 chars)', content.smtpPass || '', value => setField('smtpPass', value))}{text('Contact Mobile Number (Website & WhatsApp)', content.contactPhone || '', value => setField('contactPhone', value))}</div></div><div className="grid gap-4 bg-white p-5 sm:grid-cols-2">{text('Hero eyebrow', content.heroEyebrow, value => setField('heroEyebrow', value))}{text('Hero title', content.heroTitle, value => setField('heroTitle', value))}{text('Hero emphasis', content.heroEmphasis, value => setField('heroEmphasis', value))}{text('Hero intro', content.heroIntro, value => setField('heroIntro', value), true)}<div className="sm:col-span-2"><h3 className="mb-3 font-serif text-2xl">Hero slideshow</h3><div className="grid gap-4 sm:grid-cols-3">{content.heroImages.map((imageUrl, index) => <div key={`hero-slide-${index}`} className="rounded-lg border border-[#eeeae2] bg-[#faf8f5] p-3">{image(`Slide ${index + 1}`, imageUrl, url => { const next = { ...content, heroImages: content.heroImages.map((item, itemIndex) => itemIndex === index ? url : item) }; setField('heroImages', next.heroImages); return next; }, `hero-slide-${index}`)}<button onClick={() => { const next = { ...content, heroImages: content.heroImages.filter((_, itemIndex) => itemIndex !== index) }; setField('heroImages', next.heroImages); void publish(next); }} className="mt-3 flex items-center gap-1 text-xs text-[#c8714d]"><Trash2 size={14} /> Remove slide</button></div>)}</div><button onClick={() => { const next = { ...content, heroImages: [...content.heroImages, ''] }; setField('heroImages', next.heroImages); void publish(next); }} className="mt-4 flex items-center gap-1 bg-[#25302c] px-3 py-2 text-xs font-bold uppercase text-white"><Plus size={14} /> Add slide</button></div></div><div className="bg-white p-5"><div className="mb-4 flex justify-between"><h3 className="font-serif text-2xl">Collections</h3><button onClick={() => { const next = { ...content, collections: [...content.collections, { id: `collection-${Date.now()}`, number: String(content.collections.length + 1).padStart(2, '0'), title: 'New collection', copy: '', image: '' }] }; setField('collections', next.collections); void publish(next); }} className="flex items-center gap-1 bg-[#25302c] px-3 py-2 text-xs font-bold uppercase text-white"><Plus size={14} /> Add</button></div>{content.collections.map((item, index) => <div className="grid gap-3 border-t border-[#eeeae2] py-4 sm:grid-cols-2" key={item.id}>{text('Title', item.title, value => updateCollection(index, { title: value }))}{image('Image', item.image, url => { const nextCollections = content.collections.map((c, i) => i === index ? { ...c, image: url } : c); const next = { ...content, collections: nextCollections }; setField('collections', next.collections); return next; }, `collection-${item.id}`)}{text('Description', item.copy, value => updateCollection(index, { copy: value }), true)}<button onClick={() => { const next = { ...content, collections: content.collections.filter(row => row.id !== item.id) }; setField('collections', next.collections); void publish(next); }} className="flex items-center gap-1 text-xs text-[#c8714d]"><Trash2 size={14} /> Delete collection</button></div>)}</div><div className="bg-white p-5"><h3 className="mb-3 font-serif text-2xl">Our approach / Story section</h3><div className="grid gap-4 sm:grid-cols-2">{text('Story eyebrow', content.storyEyebrow, value => setField('storyEyebrow', value))}{text('Story heading', content.storyHeading, value => setField('storyHeading', value))}{text('Story emphasis', content.storyEmphasis, value => setField('storyEmphasis', value))}{image('Story image', content.storyImage, url => { const next = { ...content, storyImage: url }; setField('storyImage', url); return next; }, 'story-image')}<div className="sm:col-span-2">{text('Story body text', content.storyBody, value => setField('storyBody', value), true)}</div></div></div><div className="bg-white p-5"><div className="mb-4 flex justify-between"><h3 className="font-serif text-2xl">Inspiration images</h3><button onClick={() => { const next = { ...content, projects: [...content.projects, { id: `project-${Date.now()}`, title: 'New project', type: 'Chennai', image: '' }] }; setField('projects', next.projects); void publish(next); }} className="flex items-center gap-1 bg-[#25302c] px-3 py-2 text-xs font-bold uppercase text-white"><Plus size={14} /> Add</button></div><div className="grid gap-4 sm:grid-cols-2">{content.projects.map((item, index) => <div className="border-t border-[#eeeae2] pt-4" key={item.id}>{text('Title', item.title, value => updateProject(index, { title: value }))}{text('Label', item.type, value => updateProject(index, { type: value }))}{image('Image', item.image, url => { const nextProjects = content.projects.map((p, i) => i === index ? { ...p, image: url } : p); const next = { ...content, projects: nextProjects }; setField('projects', next.projects); return next; }, `project-${item.id}`)}<button onClick={() => { const next = { ...content, projects: content.projects.filter(row => row.id !== item.id) }; setField('projects', next.projects); void publish(next); }} className="mt-2 flex items-center gap-1 text-xs text-[#c8714d]"><Trash2 size={14} /> Delete image</button></div>)}</div></div><div className="bg-white p-5"><h3 className="mb-2 font-serif text-2xl">📋 Contact Form & Dropdown Settings</h3><p className="mb-4 text-xs text-[#6c756e]">Customize the dropdown label and choices customers select on your enquiry form.</p><div className="space-y-4">{text('Dropdown Question Label', content.formServiceLabel || 'What are you looking for?', value => setField('formServiceLabel', value))}<div><label className="block text-xs font-bold uppercase tracking-wider text-[#6c756e] mb-1">Dropdown Options (Separate options with commas)</label><textarea className={fieldClass} rows={3} value={(content.formServiceOptions || ['Curtains', 'Blinds & shades', 'Sofa or upholstery', 'Full room refresh', 'Not sure yet']).join(', ')} onChange={event => setField('formServiceOptions', event.target.value.split(',').map(s => s.trim()).filter(Boolean))} placeholder="Curtains, Blinds & shades, Sofa or upholstery, Full room refresh, Not sure yet" /><p className="mt-1 text-[11px] text-[#6c756e]">Preview in form: {(content.formServiceOptions || []).map(opt => `[${opt}]`).join(' ')}</p></div></div></div></section>;
+  return (
+    <section className="space-y-6">
+      <div>
+        <h2 className="font-serif text-3xl">Page content</h2>
+        <p className="text-sm text-[#6c756e]">Every image upload is stored in your Google Drive folder.</p>
+      </div>
+
+      <ProtectedSection
+        title="🔔 Automated HTML Email Alert Settings"
+        description="Enter your Resend API key OR Gmail App Password below to send automatic, formatted HTML emails whenever an enquiry is submitted."
+        currentPassword={content.adminPassword || (typeof window !== 'undefined' ? localStorage.getItem('elshadai_admin_password') : null) || 'change-me-now'}
+      >
+        <div className="grid gap-4 sm:grid-cols-2">
+          {text('Alert Recipient Emails (Comma separated)', content.adminNotificationEmail || 'dharaanish@gmail.com, monovawebsite@gmail.com', value => setField('adminNotificationEmail', value))}
+          {text('Resend API Key (re_...)', content.resendApiKey || '', value => setField('resendApiKey', value))}
+          {text('Sender Gmail Address', content.smtpUser || 'monovawebsite@gmail.com', value => setField('smtpUser', value))}
+          {text('Sender Gmail App Password (16 chars)', content.smtpPass || '', value => setField('smtpPass', value))}
+        </div>
+      </ProtectedSection>
+
+      <div className="grid gap-4 bg-white p-5 sm:grid-cols-2">
+        {text('Hero eyebrow', content.heroEyebrow, value => setField('heroEyebrow', value))}
+        {text('Hero title', content.heroTitle, value => setField('heroTitle', value))}
+        {text('Hero emphasis', content.heroEmphasis, value => setField('heroEmphasis', value))}
+        {text('Hero intro', content.heroIntro, value => setField('heroIntro', value), true)}
+        <div className="sm:col-span-2">
+          <h3 className="mb-3 font-serif text-2xl">Hero slideshow</h3>
+          <div className="grid gap-4 sm:grid-cols-3">
+            {content.heroImages.map((imageUrl, index) => (
+              <div key={`hero-slide-${index}`} className="rounded-lg border border-[#eeeae2] bg-[#faf8f5] p-3">
+                {image(`Slide ${index + 1}`, imageUrl, url => { const next = { ...content, heroImages: content.heroImages.map((item, itemIndex) => itemIndex === index ? url : item) }; setField('heroImages', next.heroImages); return next; }, `hero-slide-${index}`)}
+                <button onClick={() => { const next = { ...content, heroImages: content.heroImages.filter((_, itemIndex) => itemIndex !== index) }; setField('heroImages', next.heroImages); void publish(next); }} className="mt-3 flex items-center gap-1 text-xs text-[#c8714d]"><Trash2 size={14} /> Remove slide</button>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => { const next = { ...content, heroImages: [...content.heroImages, ''] }; setField('heroImages', next.heroImages); void publish(next); }} className="mt-4 flex items-center gap-1 bg-[#25302c] px-3 py-2 text-xs font-bold uppercase text-white"><Plus size={14} /> Add slide</button>
+        </div>
+      </div>
+
+      <div className="bg-white p-5">
+        <div className="mb-4 flex justify-between">
+          <h3 className="font-serif text-2xl">Collections</h3>
+          <button onClick={() => { const next = { ...content, collections: [...content.collections, { id: `collection-${Date.now()}`, number: String(content.collections.length + 1).padStart(2, '0'), title: 'New collection', copy: '', image: '' }] }; setField('collections', next.collections); void publish(next); }} className="flex items-center gap-1 bg-[#25302c] px-3 py-2 text-xs font-bold uppercase text-white"><Plus size={14} /> Add</button>
+        </div>
+        {content.collections.map((item, index) => (
+          <div className="grid gap-3 border-t border-[#eeeae2] py-4 sm:grid-cols-2" key={item.id}>
+            {text('Title', item.title, value => updateCollection(index, { title: value }))}
+            {image('Image', item.image, url => { const nextCollections = content.collections.map((c, i) => i === index ? { ...c, image: url } : c); const next = { ...content, collections: nextCollections }; setField('collections', next.collections); return next; }, `collection-${item.id}`)}
+            {text('Description', item.copy, value => updateCollection(index, { copy: value }), true)}
+            <button onClick={() => { const next = { ...content, collections: content.collections.filter(row => row.id !== item.id) }; setField('collections', next.collections); void publish(next); }} className="flex items-center gap-1 text-xs text-[#c8714d]"><Trash2 size={14} /> Delete collection</button>
+          </div>
+        ))}
+      </div>
+
+      <div className="bg-white p-5">
+        <h3 className="mb-3 font-serif text-2xl">Our approach / Story section</h3>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {text('Story eyebrow', content.storyEyebrow, value => setField('storyEyebrow', value))}
+          {text('Story heading', content.storyHeading, value => setField('storyHeading', value))}
+          {text('Story emphasis', content.storyEmphasis, value => setField('storyEmphasis', value))}
+          {image('Story image', content.storyImage, url => { const next = { ...content, storyImage: url }; setField('storyImage', url); return next; }, 'story-image')}
+          <div className="sm:col-span-2">{text('Story body text', content.storyBody, value => setField('storyBody', value), true)}</div>
+        </div>
+      </div>
+
+      <div className="bg-white p-5">
+        <div className="mb-4 flex justify-between">
+          <h3 className="font-serif text-2xl">Inspiration images</h3>
+          <button onClick={() => { const next = { ...content, projects: [...content.projects, { id: `project-${Date.now()}`, title: 'New project', type: 'Chennai', image: '' }] }; setField('projects', next.projects); void publish(next); }} className="flex items-center gap-1 bg-[#25302c] px-3 py-2 text-xs font-bold uppercase text-white"><Plus size={14} /> Add</button>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {content.projects.map((item, index) => (
+            <div className="border-t border-[#eeeae2] pt-4" key={item.id}>
+              {text('Title', item.title, value => updateProject(index, { title: value }))}
+              {text('Label', item.type, value => updateProject(index, { type: value }))}
+              {image('Image', item.image, url => { const nextProjects = content.projects.map((p, i) => i === index ? { ...p, image: url } : p); const next = { ...content, projects: nextProjects }; setField('projects', next.projects); return next; }, `project-${item.id}`)}
+              <button onClick={() => { const next = { ...content, projects: content.projects.filter(row => row.id !== item.id) }; setField('projects', next.projects); void publish(next); }} className="mt-2 flex items-center gap-1 text-xs text-[#c8714d]"><Trash2 size={14} /> Delete image</button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="bg-white p-5">
+        <h3 className="mb-2 font-serif text-2xl">📋 Contact Form & Dropdown Settings</h3>
+        <p className="mb-4 text-xs text-[#6c756e]">Customize the dropdown label and choices customers select on your enquiry form.</p>
+        <div className="space-y-4">
+          {text('Dropdown Question Label', content.formServiceLabel || 'What are you looking for?', value => setField('formServiceLabel', value))}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#6c756e] mb-1">Dropdown Options (Separate options with commas)</label>
+            <textarea className={fieldClass} rows={3} value={(content.formServiceOptions || ['Curtains', 'Blinds & shades', 'Sofa or upholstery', 'Full room refresh', 'Not sure yet']).join(', ')} onChange={event => setField('formServiceOptions', event.target.value.split(',').map(s => s.trim()).filter(Boolean))} placeholder="Curtains, Blinds & shades, Sofa or upholstery, Full room refresh, Not sure yet" />
+            <p className="mt-1 text-[11px] text-[#6c756e]">Preview in form: {(content.formServiceOptions || []).map(opt => `[${opt}]`).join(' ')}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 function SettingsTab({ content, setField }: { content: PublicSiteContent; setField: <K extends keyof PublicSiteContent>(key: K, value: PublicSiteContent[K]) => void }) {
-  return <section className="space-y-6"><div><h2 className="font-serif text-3xl">Site settings</h2><p className="text-sm text-[#6c756e]">These settings are also stored in the Content sheet.</p></div><div className="grid gap-4 bg-white p-5"><label className="text-xs font-bold uppercase tracking-wider text-[#6c756e]">Alert Recipient Emails (Receives New Enquiry Emails)<input className={fieldClass} placeholder="dharaanish@gmail.com, monovawebsite@gmail.com" value={content.adminNotificationEmail || 'dharaanish@gmail.com, monovawebsite@gmail.com'} onChange={event => setField('adminNotificationEmail', event.target.value)} /></label><label className="text-xs font-bold uppercase tracking-wider text-[#6c756e]">Resend API Key (re_...)<input className={fieldClass} placeholder="re_123456789..." value={content.resendApiKey || ''} onChange={event => setField('resendApiKey', event.target.value)} /></label><label className="text-xs font-bold uppercase tracking-wider text-[#6c756e]">Sender Gmail Address<input className={fieldClass} placeholder="monovawebsite@gmail.com" value={content.smtpUser || 'monovawebsite@gmail.com'} onChange={event => setField('smtpUser', event.target.value)} /></label><label className="text-xs font-bold uppercase tracking-wider text-[#6c756e]">Sender Gmail App Password (16 characters)<input className={fieldClass} type="password" placeholder="abcd efgh ijkl mnop" value={content.smtpPass || ''} onChange={event => setField('smtpPass', event.target.value)} /></label><label className="text-xs font-bold uppercase tracking-wider text-[#6c756e]">Mobile number<input className={fieldClass} placeholder="+91 9XXXXXXXXX" value={content.contactPhone} onChange={event => setField('contactPhone', event.target.value)} /></label><label className="text-xs font-bold uppercase tracking-wider text-[#6c756e]">Instagram URL<input className={fieldClass} value={content.instagramUrl} onChange={event => setField('instagramUrl', event.target.value)} /></label><label className="text-xs font-bold uppercase tracking-wider text-[#6c756e]">Address<textarea className={fieldClass} rows={3} value={content.address} onChange={event => setField('address', event.target.value)} /></label></div><div className="bg-white p-5"><h3 className="mb-3 font-serif text-2xl">Visual effects</h3>{Object.entries({ revealOnScroll: 'Reveal sections as visitors scroll', imageHoverZoom: 'Subtle image hover zoom', floatingAccent: 'Floating decorative accent' }).map(([key, label]) => <label className="flex items-center gap-3 border-b border-[#eeeae2] py-3 text-sm" key={key}><input type="checkbox" checked={content.effects[key as keyof PublicSiteContent['effects']]} onChange={event => setField('effects', { ...content.effects, [key]: event.target.checked })} />{label}</label>)}</div></section>;
-}
+  const text = (label: string, value: string, onChange: (value: string) => void, area = false, type = 'text') => (
+    <label className="block text-xs font-bold uppercase tracking-wider text-[#6c756e]">
+      {label}
+      {area ? (
+        <textarea className={fieldClass} rows={3} value={value} onChange={event => onChange(event.target.value)} />
+      ) : (
+        <input type={type} className={fieldClass} value={value} onChange={event => onChange(event.target.value)} />
+      )}
+    </label>
+  );
 
+  const currentPassword = content.adminPassword || (typeof window !== 'undefined' ? localStorage.getItem('elshadai_admin_password') : null) || 'change-me-now';
+
+  return (
+    <section className="space-y-6">
+      <div>
+        <h2 className="font-serif text-3xl">Site Settings & Security</h2>
+        <p className="text-sm text-[#6c756e]">Manage your admin credentials, email alerts, and site details.</p>
+      </div>
+
+      <ProtectedSection
+        title="🔑 Admin Credentials (Change Username & Password)"
+        description="Update the username and password used to log in to this control room."
+        currentPassword={currentPassword}
+      >
+        <div className="grid gap-4 sm:grid-cols-2">
+          {text('Admin Login Username', content.adminUsername || 'admin@elshadai', value => setField('adminUsername', value))}
+          {text('New Admin Login Password', content.adminPassword || 'change-me-now', value => setField('adminPassword', value), false, 'password')}
+        </div>
+      </ProtectedSection>
+
+      <ProtectedSection
+        title="🔔 Automated HTML Email Alert Settings"
+        description="Enter your Resend API key OR Gmail App Password below to send automatic, formatted HTML emails whenever an enquiry is submitted."
+        currentPassword={currentPassword}
+      >
+        <div className="grid gap-4 sm:grid-cols-2">
+          {text('Alert Recipient Emails (Comma separated)', content.adminNotificationEmail || 'dharaanish@gmail.com, monovawebsite@gmail.com', value => setField('adminNotificationEmail', value))}
+          {text('Resend API Key (re_...)', content.resendApiKey || '', value => setField('resendApiKey', value))}
+          {text('Sender Gmail Address', content.smtpUser || 'monovawebsite@gmail.com', value => setField('smtpUser', value))}
+          {text('Sender Gmail App Password (16 chars)', content.smtpPass || '', value => setField('smtpPass', value), false, 'password')}
+        </div>
+      </ProtectedSection>
+
+      <div className="grid gap-4 bg-white p-5 rounded-lg shadow-sm">
+        <h3 className="font-serif text-2xl">General Site Information</h3>
+        {text('Contact Mobile Number (Website & WhatsApp)', content.contactPhone || '', value => setField('contactPhone', value))}
+        {text('Instagram URL', content.instagramUrl, value => setField('instagramUrl', value))}
+        {text('Address', content.address, value => setField('address', value), true)}
+      </div>
+
+      <div className="bg-white p-5 rounded-lg shadow-sm">
+        <h3 className="mb-3 font-serif text-2xl">Visual effects</h3>
+        {Object.entries({ revealOnScroll: 'Reveal sections as visitors scroll', imageHoverZoom: 'Subtle image hover zoom', floatingAccent: 'Floating decorative accent' }).map(([key, label]) => (
+          <label className="flex items-center gap-3 border-b border-[#eeeae2] py-3 text-sm" key={key}>
+            <input type="checkbox" checked={content.effects[key as keyof PublicSiteContent['effects']]} onChange={event => setField('effects', { ...content.effects, [key]: event.target.checked })} />
+            {label}
+          </label>
+        ))}
+      </div>
+    </section>
+  );
+}
