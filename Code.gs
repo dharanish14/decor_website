@@ -128,18 +128,22 @@ function doPost(event) {
       leadsSheet_().appendRow(LEAD_HEADERS.map(header => data[header] || ''));
       try {
         const targetEmail = data.adminNotificationEmail || 'dharaanish@gmail.com';
-        MailApp.sendEmail({
-          to: targetEmail,
-          subject: '🔔 New Website Enquiry: ' + data.name + ' (' + data.phone + ')',
-          body: 'New Enquiry Received on Elshadai Decors Website!\n\n' +
-                '• Name: ' + data.name + '\n' +
-                '• Phone: ' + data.phone + '\n' +
-                '• Email: ' + data.email + '\n' +
-                '• Service Needed: ' + (data.serviceType || 'General') + '\n' +
-                '• Message: ' + (data.message || 'No additional details') + '\n\n' +
-                'Date: ' + new Date().toLocaleString()
-        });
-      } catch (e) { /* ignore email error */ }
+        const emailSubject = '🔔 New Website Enquiry: ' + data.name + ' (' + data.phone + ')';
+        const emailBody = 'New Enquiry Received on Elshadai Decors Website!\n\n' +
+              '• Name: ' + data.name + '\n' +
+              '• Phone: ' + data.phone + '\n' +
+              '• Email: ' + data.email + '\n' +
+              '• Service Needed: ' + (data.serviceType || 'General') + '\n' +
+              '• Message: ' + (data.message || 'No additional details') + '\n\n' +
+              'Date: ' + new Date().toLocaleString();
+        try {
+          MailApp.sendEmail(targetEmail, emailSubject, emailBody);
+        } catch (mailErr) {
+          GmailApp.sendEmail(targetEmail, emailSubject, emailBody);
+        }
+      } catch (e) {
+        Logger.log('Email send error: ' + e);
+      }
       return json_({ success: true });
     }
     return json_({ success: false, error: 'Unknown action' });
