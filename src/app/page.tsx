@@ -15,7 +15,12 @@ export default function HomePage() {
       const stored = typeof window !== 'undefined' ? localStorage.getItem('elshadai_public_content') : null;
       if (stored) {
         try {
-          setContent({ ...INITIAL_PUBLIC_CONTENT, ...JSON.parse(stored) });
+          const parsed = JSON.parse(stored);
+          if (parsed.heroTitle === 'Connection test') {
+            parsed.heroTitle = INITIAL_PUBLIC_CONTENT.heroTitle;
+            parsed.heroEmphasis = INITIAL_PUBLIC_CONTENT.heroEmphasis;
+          }
+          setContent({ ...INITIAL_PUBLIC_CONTENT, ...parsed });
         } catch { /* use current */ }
       }
       void fetch('/api/site?action=content', { cache: 'no-store' })
@@ -23,6 +28,10 @@ export default function HomePage() {
         .then(data => {
           if (data.content) {
             const merged = { ...INITIAL_PUBLIC_CONTENT, ...data.content };
+            if (merged.heroTitle === 'Connection test') {
+              merged.heroTitle = INITIAL_PUBLIC_CONTENT.heroTitle;
+              merged.heroEmphasis = INITIAL_PUBLIC_CONTENT.heroEmphasis;
+            }
             setContent(merged);
             localStorage.setItem('elshadai_public_content', JSON.stringify(merged));
           }
@@ -50,7 +59,14 @@ export default function HomePage() {
         <nav className={menuOpen ? 'main-nav is-open' : 'main-nav'}>
           <a href="#collections" onClick={() => setMenuOpen(false)}>Collections</a><a href="#story" onClick={() => setMenuOpen(false)}>Our approach</a><a href="#projects" onClick={() => setMenuOpen(false)}>Inspiration</a><a href="#contact" onClick={() => setMenuOpen(false)}>Visit / enquire</a>
         </nav>
-        <div className="header-actions"><button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">{menuOpen ? <X /> : <Menu />}</button></div>
+        <div className="header-actions">
+          {content.contactPhone && (
+            <a href={`tel:${content.contactPhone.replace(/\s/g, '')}`} className="flex items-center gap-1.5 text-xs font-bold text-[#25302c] hover:text-[#c8714d] transition-colors" style={{ textDecoration: 'none' }}>
+              <Phone size={14} /> {content.contactPhone}
+            </a>
+          )}
+          <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">{menuOpen ? <X /> : <Menu />}</button>
+        </div>
       </header>
 
       <section className="hero" id="top"><div className="hero-copy"><p className="eyebrow"><span /> {content.heroEyebrow}</p><h1>{content.heroTitle}<br /><em>{content.heroEmphasis}</em></h1><p className="hero-intro">{content.heroIntro}</p><div className="hero-actions"><a className="button button-dark" href="#contact">Start a conversation <ArrowUpRight size={17} /></a><a className="text-link" href="#collections">Explore collections <ChevronDown size={16} /></a></div><div className="hero-note"><Sparkles size={16} /> {content.heroNote}</div></div><div className="hero-image-wrap">{heroImages.map((image, index) => <img key={`${image}-${index}`} className={`hero-image ${index === heroIndex % heroImages.length ? 'is-active' : ''}`} src={image} onError={event => { const fallback = INITIAL_PUBLIC_CONTENT.heroImages[index % INITIAL_PUBLIC_CONTENT.heroImages.length]; if (event.currentTarget.src !== fallback) event.currentTarget.src = fallback; }} alt="Warm, layered living room with curtains and a sofa" />)}<div className="hero-caption"><span>{String((heroIndex % heroImages.length) + 1).padStart(2, '0')} / {String(heroImages.length).padStart(2, '0')}</span><span>Living beautifully, daily</span></div><div className="hero-dots">{heroImages.map((image, index) => <button key={image} className={index === heroIndex % heroImages.length ? 'is-active' : ''} onClick={() => setHeroIndex(index)} aria-label={`Show image ${index + 1}`} />)}</div></div></section>
@@ -67,7 +83,7 @@ export default function HomePage() {
 
       <section className="map-section"><div className="map-heading"><p className="eyebrow"><MapPin size={16} /> Find us in Chennai</p><h2>Near MGR Statue,<br /><em>K.K. Nagar.</em></h2><p>Use the map to plan your visit. The pin is set near the listed Elshadai Decors location in Nesapakkam.</p></div><div className="map-frame"><iframe title="Elshadai Decors satellite location" src="https://www.google.com/maps?q=13.030309,80.190689&z=17&t=k&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" /><a className="map-open" href="https://www.google.com/maps/@13.030309,80.190689,17z/data=!3m1!1e3" target="_blank" rel="noreferrer">Open satellite view <ArrowUpRight size={15} /></a></div></section>
 
-      <ContactForm /><footer className="site-footer"><div className="footer-brand"><span className="brand-mark">E</span><span><strong>{content.brandName}</strong><small>{content.brandDescriptor}</small></span></div><p>Window treatments, upholstery, and considered home furnishings in Chennai.</p><div className="footer-links"><a href={content.instagramUrl} target="_blank" rel="noreferrer"><Instagram size={16} /> Instagram</a><a href="#contact">Enquire</a><span>© {new Date().getFullYear()} Elshadai Decors</span></div></footer>
+      <ContactForm /><footer className="site-footer"><div className="footer-brand"><span className="brand-mark">E</span><span><strong>{content.brandName}</strong><small>{content.brandDescriptor}</small></span></div><p>Window treatments, upholstery, and considered home furnishings in Chennai.{content.contactPhone && <> · 📞 <a href={`tel:${content.contactPhone.replace(/\s/g, '')}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{content.contactPhone}</a></>}</p><div className="footer-links"><a href={content.instagramUrl} target="_blank" rel="noreferrer"><Instagram size={16} /> Instagram</a><a href="#contact">Enquire</a><span>© {new Date().getFullYear()} Elshadai Decors</span></div></footer>
     </main>
   );
 }
