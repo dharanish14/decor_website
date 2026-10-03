@@ -16,8 +16,16 @@ export default function ContactForm() {
   const [smtpUser, setSmtpUser] = useState('monovawebsite@gmail.com');
   const [smtpPass, setSmtpPass] = useState('');
   const [resendApiKey, setResendApiKey] = useState('');
+  const [serviceLabel, setServiceLabel] = useState('What are you looking for?');
+  const [serviceOptions, setServiceOptions] = useState<string[]>([
+    'Curtains',
+    'Blinds & shades',
+    'Sofa or upholstery',
+    'Full room refresh',
+    'Not sure yet'
+  ]);
 
-  useEffect(() => {
+  const syncContent = () => {
     const stored = typeof window !== 'undefined' ? localStorage.getItem('elshadai_public_content') : null;
     if (stored) {
       try {
@@ -27,8 +35,18 @@ export default function ContactForm() {
         if (parsed.smtpUser) setSmtpUser(parsed.smtpUser);
         if (parsed.smtpPass) setSmtpPass(parsed.smtpPass);
         if (parsed.resendApiKey) setResendApiKey(parsed.resendApiKey);
+        if (parsed.formServiceLabel) setServiceLabel(parsed.formServiceLabel);
+        if (Array.isArray(parsed.formServiceOptions) && parsed.formServiceOptions.length > 0) {
+          setServiceOptions(parsed.formServiceOptions);
+        }
       } catch { /* use default */ }
     }
+  };
+
+  useEffect(() => {
+    syncContent();
+    window.addEventListener('storage', syncContent);
+    return () => window.removeEventListener('storage', syncContent);
   }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -115,13 +133,11 @@ export default function ContactForm() {
             </div>
             <div className="form-row">
               <label>Email<input required type="email" name="email" placeholder="you@example.com" /></label>
-              <label>What are you looking for?
-                <select name="service" defaultValue="Curtains">
-                  <option>Curtains</option>
-                  <option>Blinds & shades</option>
-                  <option>Sofa or upholstery</option>
-                  <option>Full room refresh</option>
-                  <option>Not sure yet</option>
+              <label>{serviceLabel || 'What are you looking for?'}
+                <select name="service" defaultValue={serviceOptions[0] || 'Curtains'}>
+                  {serviceOptions.map((opt, i) => (
+                    <option key={i} value={opt}>{opt}</option>
+                  ))}
                 </select>
               </label>
             </div>
