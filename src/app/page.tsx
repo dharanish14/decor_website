@@ -135,7 +135,7 @@ export default function HomePage() {
         <button onClick={() => setEnquiryOpen(true)} className="enquiry-float" aria-label="Enquire Now" style={{ cursor: 'pointer', border: 'none' }}>
           <span>Enquiry</span>
         </button>
-        <a href={`https://wa.me/${(content.contactPhone || '917904614023').replace(/[^0-9]/g, '').replace(/^(\d{10})$/, '91$1')}`} target="_blank" rel="noreferrer" className="whatsapp-float" aria-label="Chat on WhatsApp">
+        <a href={`https://wa.me/${(content.contactPhone || '917904614023').replace(/[^0-9]/g, '').replace(/^(\d{10})$/, '91$1')}?text=${encodeURIComponent("Hi Elshadai Decors! I'm interested in getting a free estimate for my home interiors.")}`} target="_blank" rel="noreferrer" className="whatsapp-float" aria-label="Chat on WhatsApp">
           <MessageCircle size={24} />
         </a>
       </div>
