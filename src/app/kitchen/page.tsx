@@ -36,7 +36,7 @@ export default function KitchenPage() {
           <p>Discover the latest models available for your modern kitchen.</p>
         </div>
         <div className="collection-grid">
-          {(content.kitchenModels || []).map((model) => (
+          {((content.kitchenModels?.length ? content.kitchenModels : INITIAL_PUBLIC_CONTENT.kitchenModels) || []).map((model) => (
             <article className="collection-card" key={model.id}>
               <div className="collection-image">
                 <img src={normalizeImageUrl(model.image)} alt={model.title} />

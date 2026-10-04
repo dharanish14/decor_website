@@ -36,7 +36,7 @@ export default function BedroomPage() {
           <p>Discover the latest models available for your bedroom.</p>
         </div>
         <div className="collection-grid">
-          {(content.bedroomModels || []).map((model) => (
+          {((content.bedroomModels?.length ? content.bedroomModels : INITIAL_PUBLIC_CONTENT.bedroomModels) || []).map((model) => (
             <article className="collection-card" key={model.id}>
               <div className="collection-image">
                 <img src={normalizeImageUrl(model.image)} alt={model.title} />

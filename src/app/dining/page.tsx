@@ -36,7 +36,7 @@ export default function DiningPage() {
           <p>Discover the latest models available for your dining area.</p>
         </div>
         <div className="collection-grid">
-          {(content.diningModels || []).map((model) => (
+          {((content.diningModels?.length ? content.diningModels : INITIAL_PUBLIC_CONTENT.diningModels) || []).map((model) => (
             <article className="collection-card" key={model.id}>
               <div className="collection-image">
                 <img src={normalizeImageUrl(model.image)} alt={model.title} />

@@ -96,6 +96,7 @@ export interface PublicSiteContent {
   livingRoomModels: CollectionItem[];
   diningModels: CollectionItem[];
   roomCategories: { id: string; title: string; copy: string; image: string; link: string }[];
+  packages: { id: string; badge: string; title: string; oldPrice: string; newPrice: string; features: string[] }[];
   effects: {
     revealOnScroll: boolean;
     imageHoverZoom: boolean;
@@ -153,22 +154,32 @@ export const INITIAL_PUBLIC_CONTENT: PublicSiteContent = {
   instagramUrl: 'https://www.instagram.com/elshadai_decors/',
   justdialUrl: 'https://www.justdial.com/Chennai/Elshadai-Decors-Near-Mgr-Statue-Opp-to-Pillayar-Kovil-K-K-Nagar/044PXX44-XX44-091119153916-B3B2_BZDET',
   kitchenModels: [
-    { id: 'k1', number: '01', title: 'Modern L-Shape', copy: 'Sleek handleless design with quartz top.', image: 'https://images.unsplash.com/photo-1556910103-1c02745a872f?q=80&w=600&auto=format&fit=crop' }
+    { id: 'k1', number: '01', title: 'Modern L-Shape', copy: 'Sleek handleless design with quartz top.', image: 'https://images.unsplash.com/photo-1556910103-1c02745a872f?q=80&w=800&auto=format&fit=crop' },
+    { id: 'k2', number: '02', title: 'Classic U-Shape', copy: 'Spacious layout with premium finishes.', image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=800&auto=format&fit=crop' },
+    { id: 'k3', number: '03', title: 'Island Kitchen', copy: 'Perfect for large spaces and entertaining.', image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=800&auto=format&fit=crop' }
   ],
   bedroomModels: [
-    { id: 'b1', number: '01', title: 'Minimalist Haven', copy: 'Platform bed with warm wooden tones.', image: 'https://images.unsplash.com/photo-1505693314120-0d443867891c?q=80&w=600&auto=format&fit=crop' }
+    { id: 'b1', number: '01', title: 'Minimalist Haven', copy: 'Platform bed with warm wooden tones.', image: 'https://images.unsplash.com/photo-1505693314120-0d443867891c?q=80&w=800&auto=format&fit=crop' },
+    { id: 'b2', number: '02', title: 'Luxury Master', copy: 'Plush headboard with integrated lighting.', image: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?q=80&w=800&auto=format&fit=crop' }
   ],
   livingRoomModels: [
-    { id: 'l1', number: '01', title: 'Cozy Scandinavian', copy: 'Bright and airy setup with plush seating.', image: 'https://images.unsplash.com/photo-1583847268964-b28ce8f52859?q=80&w=600&auto=format&fit=crop' }
+    { id: 'l1', number: '01', title: 'Cozy Scandinavian', copy: 'Bright and airy setup with plush seating.', image: 'https://images.unsplash.com/photo-1583847268964-b28ce8f52859?q=80&w=800&auto=format&fit=crop' },
+    { id: 'l2', number: '02', title: 'Modern TV Unit', copy: 'Floating shelves with backlighting.', image: 'https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=800&auto=format&fit=crop' }
   ],
   diningModels: [
-    { id: 'd1', number: '01', title: 'Classic Wood', copy: 'Six-seater solid oak dining set.', image: 'https://images.unsplash.com/photo-1617806118233-18e1c0945594?q=80&w=600&auto=format&fit=crop' }
+    { id: 'd1', number: '01', title: 'Classic Wood', copy: 'Six-seater solid oak dining set.', image: 'https://images.unsplash.com/photo-1617806118233-18e1c0945594?q=80&w=800&auto=format&fit=crop' },
+    { id: 'd2', number: '02', title: 'Marble Top Elegance', copy: 'Luxury dining with upholstered chairs.', image: 'https://images.unsplash.com/photo-1604578762246-41134e37f9cc?q=80&w=800&auto=format&fit=crop' }
   ],
   roomCategories: [
-    { id: 'cat-kitchen', title: 'Kitchens', copy: 'Modern, modular, and built for your culinary journey.', image: 'https://images.unsplash.com/photo-1556910103-1c02745a872f?q=80&w=600&auto=format&fit=crop', link: '/kitchen' },
-    { id: 'cat-bedroom', title: 'Bedrooms', copy: 'Restful spaces tailored to your comfort.', image: 'https://images.unsplash.com/photo-1505693314120-0d443867891c?q=80&w=600&auto=format&fit=crop', link: '/bedroom' },
-    { id: 'cat-living', title: 'Living Rooms', copy: 'The heart of your home, designed for living.', image: 'https://images.unsplash.com/photo-1583847268964-b28ce8f52859?q=80&w=600&auto=format&fit=crop', link: '/living-room' },
-    { id: 'cat-dining', title: 'Dining', copy: 'Elegant settings for everyday meals and gatherings.', image: 'https://images.unsplash.com/photo-1617806118233-18e1c0945594?q=80&w=600&auto=format&fit=crop', link: '/dining' }
+    { id: 'cat-kitchen', title: 'Kitchens', copy: 'Modern, modular, and built for your culinary journey.', image: 'https://images.unsplash.com/photo-1556910103-1c02745a872f?q=80&w=800&auto=format&fit=crop', link: '/kitchen' },
+    { id: 'cat-bedroom', title: 'Bedrooms', copy: 'Restful spaces tailored to your comfort.', image: 'https://images.unsplash.com/photo-1505693314120-0d443867891c?q=80&w=800&auto=format&fit=crop', link: '/bedroom' },
+    { id: 'cat-living', title: 'Living Rooms', copy: 'The heart of your home, designed for living.', image: 'https://images.unsplash.com/photo-1583847268964-b28ce8f52859?q=80&w=800&auto=format&fit=crop', link: '/living-room' },
+    { id: 'cat-dining', title: 'Dining', copy: 'Elegant settings for everyday meals and gatherings.', image: 'https://images.unsplash.com/photo-1617806118233-18e1c0945594?q=80&w=800&auto=format&fit=crop', link: '/dining' }
+  ],
+  packages: [
+    { id: 'pkg-1', badge: '-30%', title: '1 BHK Essential', oldPrice: '₹1,00,000', newPrice: '₹70,000', features: ['Modular Kitchen (Base + Wall)', '1 Wardrobe (Sliding)', 'TV Unit (Basic)'] },
+    { id: 'pkg-2', badge: '-30%', title: '2 BHK Essential', oldPrice: '₹2,50,000', newPrice: '₹1,75,000', features: ['Modular Kitchen with Accessories', '2 Wardrobes (Premium Finish)', 'TV Unit & Shoe Rack'] },
+    { id: 'pkg-3', badge: '-30%', title: '3 BHK Premium', oldPrice: '₹4,00,000', newPrice: '₹2,80,000', features: ['Luxury Island Kitchen', '3 Wardrobes with Loft', 'Custom Living Room Setup'] }
   ],
   effects: { revealOnScroll: true, imageHoverZoom: true, floatingAccent: true },
 };

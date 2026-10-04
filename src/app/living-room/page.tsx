@@ -36,7 +36,7 @@ export default function LivingRoomPage() {
           <p>Discover the latest models available for your living room.</p>
         </div>
         <div className="collection-grid">
-          {(content.livingRoomModels || []).map((model) => (
+          {((content.livingRoomModels?.length ? content.livingRoomModels : INITIAL_PUBLIC_CONTENT.livingRoomModels) || []).map((model) => (
             <article className="collection-card" key={model.id}>
               <div className="collection-image">
                 <img src={normalizeImageUrl(model.image)} alt={model.title} />

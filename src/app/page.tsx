@@ -78,7 +78,7 @@ export default function HomePage() {
           <p>Discover tailored models and layouts for every room in your home.</p>
         </div>
         <div className="collection-grid">
-          {(content.roomCategories || []).map((cat) => (
+          {((content.roomCategories?.length ? content.roomCategories : INITIAL_PUBLIC_CONTENT.roomCategories) || []).map((cat) => (
             <article className="collection-card" key={cat.id}>
               <a href={cat.link} className="block" style={{ textDecoration: 'none' }}>
                 <div className="collection-image">
@@ -97,11 +97,11 @@ export default function HomePage() {
 
       <section className="trust-strip">{content.trustItems.map(item => <span key={item}>{item}</span>)}</section>
 
-      <section className="section collection-section" id="collections"><div className="section-heading"><p className="eyebrow"><span /> The edit</p><h2>{content.collectionHeading}<br /><em>{content.collectionEmphasis}</em></h2><p>{content.collectionIntro}</p></div><div className="collection-grid">{content.collections.map((item) => <article className="collection-card" key={item.id}><div className="collection-image"><img src={normalizeImageUrl(item.image)} alt={item.title} /><span>{item.number}</span></div><div className="collection-copy"><h3>{item.title}</h3><p>{item.copy}</p><ArrowUpRight size={19} /></div></article>)}</div></section>
+      <section className="section collection-section" id="collections"><div className="section-heading"><p className="eyebrow"><span /> The edit</p><h2>{content.collectionHeading}<br /><em>{content.collectionEmphasis}</em></h2><p>{content.collectionIntro}</p></div><div className="collection-grid">{((content.collections?.length ? content.collections : INITIAL_PUBLIC_CONTENT.collections) || []).map((item) => <article className="collection-card" key={item.id}><div className="collection-image"><img src={normalizeImageUrl(item.image)} alt={item.title} /><span>{item.number}</span></div><div className="collection-copy"><h3>{item.title}</h3><p>{item.copy}</p><ArrowUpRight size={19} /></div></article>)}</div></section>
 
       <section className="story-section" id="story"><div className="story-image"><img src={normalizeImageUrl(content.storyImage)} alt="Sunlit interior with textured fabrics" /></div><div className="story-copy"><p className="eyebrow"><span /> {content.storyEyebrow}</p><h2>{content.storyHeading}<br /><em>{content.storyEmphasis}</em></h2><p>{content.storyBody}</p><div className="values">{content.storyValues.map(value => <div key={value}><Check size={16} /><span>{value}</span></div>)}</div><a className="text-link" href="#contact">Tell us about your space <ArrowUpRight size={16} /></a></div></section>
 
-      <section className="section projects-section" id="projects"><div className="section-heading projects-heading"><div><p className="eyebrow"><span /> A little inspiration</p><h2>{content.projectsHeading}<br /><em>{content.projectsEmphasis}</em></h2></div><p>{content.projectsIntro}</p></div><div className="project-grid">{content.projects.map((project) => <article className="project-card" key={project.id}><img src={normalizeImageUrl(project.image)} alt={project.title} /><div><p>{project.type}</p><h3>{project.title}</h3></div></article>)}</div></section>
+      <section className="section projects-section" id="projects"><div className="section-heading projects-heading"><div><p className="eyebrow"><span /> A little inspiration</p><h2>{content.projectsHeading}<br /><em>{content.projectsEmphasis}</em></h2></div><p>{content.projectsIntro}</p></div><div className="project-grid">{((content.projects?.length ? content.projects : INITIAL_PUBLIC_CONTENT.projects) || []).map((project) => <article className="project-card" key={project.id}><img src={normalizeImageUrl(project.image)} alt={project.title} /><div><p>{project.type}</p><h3>{project.title}</h3></div></article>)}</div></section>
 
       <section className="visit-section"><div><p className="eyebrow"><MapPin size={16} /> Come by</p><h2>Let’s find your<br /><em>room’s rhythm.</em></h2>{content.contactPhone && <a className="direct-phone" href={`tel:${content.contactPhone.replace(/\s/g, '')}`}><Phone size={17} /> {content.contactPhone}</a>}</div><div className="visit-details"><p>{content.address}</p><a className="button button-light" href="https://www.google.com/maps/search/?api=1&query=Elshadai+Decors+K.K.+Nagar+Chennai" target="_blank" rel="noreferrer">Get directions <ArrowUpRight size={17} /></a></div></section>
 
@@ -114,45 +114,30 @@ export default function HomePage() {
           <p>Get everything essential for your new home at unbeatable prices.</p>
         </div>
         <div className="collection-grid">
-          <article className="package-card">
-            <div className="package-badge">-30%</div>
-            <h3>1 BHK Essential</h3>
-            <div className="package-price"><s>₹1,00,000</s><br/>₹70,000</div>
-            <ul className="package-features">
-              <li>Modular Kitchen (Base + Wall)</li>
-              <li>1 Wardrobe (Sliding)</li>
-              <li>TV Unit (Basic)</li>
-            </ul>
-            <a className="button button-dark" style={{width: '100%', justifyContent: 'center'}} href="#contact">Get Free Estimate</a>
-          </article>
-          <article className="package-card">
-            <div className="package-badge">-30%</div>
-            <h3>2 BHK Essential</h3>
-            <div className="package-price"><s>₹2,50,000</s><br/>₹1,75,000</div>
-            <ul className="package-features">
-              <li>Modular Kitchen with Accessories</li>
-              <li>2 Wardrobes (Premium Finish)</li>
-              <li>TV Unit & Shoe Rack</li>
-            </ul>
-            <a className="button button-dark" style={{width: '100%', justifyContent: 'center'}} href="#contact">Get Free Estimate</a>
-          </article>
-          <article className="package-card">
-            <div className="package-badge">-30%</div>
-            <h3>3 BHK Premium</h3>
-            <div className="package-price"><s>₹4,00,000</s><br/>₹2,80,000</div>
-            <ul className="package-features">
-              <li>Luxury Island Kitchen</li>
-              <li>3 Wardrobes with Loft</li>
-              <li>Custom Living Room Setup</li>
-            </ul>
-            <a className="button button-dark" style={{width: '100%', justifyContent: 'center'}} href="#contact">Get Free Estimate</a>
-          </article>
+          {((content.packages?.length ? content.packages : INITIAL_PUBLIC_CONTENT.packages) || []).map(pkg => (
+            <article className="package-card" key={pkg.id}>
+              {pkg.badge && <div className="package-badge">{pkg.badge}</div>}
+              <h3>{pkg.title}</h3>
+              <div className="package-price"><s>{pkg.oldPrice}</s><br/>{pkg.newPrice}</div>
+              <ul className="package-features">
+                {(pkg.features || []).map((feature, i) => (
+                  <li key={i}>{feature}</li>
+                ))}
+              </ul>
+              <a className="button button-dark" style={{width: '100%', justifyContent: 'center'}} href="#contact">Get Free Estimate</a>
+            </article>
+          ))}
         </div>
       </section>
 
-      <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer" className="whatsapp-float" aria-label="Chat on WhatsApp">
-        <MessageCircle size={24} />
-      </a>
+      <div className="floating-actions">
+        <a href="#contact" className="enquiry-float" aria-label="Enquire Now">
+          <Sparkles size={24} />
+        </a>
+        <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer" className="whatsapp-float" aria-label="Chat on WhatsApp">
+          <MessageCircle size={24} />
+        </a>
+      </div>
 
       <ContactForm /><footer className="site-footer"><div className="footer-brand"><span className="brand-mark">E</span><span><strong>{content.brandName}</strong><small>{content.brandDescriptor}</small></span></div><p>Window treatments, upholstery, and considered home furnishings in Chennai.{content.contactPhone && <> · 📞 <a href={`tel:${content.contactPhone.replace(/\s/g, '')}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{content.contactPhone}</a></>}</p><div className="footer-links"><a href={content.instagramUrl} target="_blank" rel="noreferrer"><Instagram size={16} /> Instagram</a><a href="#contact">Enquire</a><span>© {new Date().getFullYear()} Elshadai Decors</span></div></footer>
     </main>
