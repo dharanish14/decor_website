@@ -39,7 +39,7 @@ export default function KitchenPage() {
           {((content.kitchenModels?.length ? content.kitchenModels : INITIAL_PUBLIC_CONTENT.kitchenModels) || []).map((model, index) => (
             <article className="collection-card" key={model.id || index}>
               <div className="collection-image">
-                <img src={normalizeImageUrl(model.image) || 'https://images.unsplash.com/photo-1556910103-1c02745a872f?q=80&w=800&auto=format&fit=crop'} onError={(e) => { if (e.currentTarget.src !== 'https://images.unsplash.com/photo-1556910103-1c02745a872f?q=80&w=800&auto=format&fit=crop') e.currentTarget.src = 'https://images.unsplash.com/photo-1556910103-1c02745a872f?q=80&w=800&auto=format&fit=crop'; }} alt={model.title || 'Kitchen Model'} />
+                <img src={normalizeImageUrl(model.image) || 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?q=80&w=800&auto=format&fit=crop'} onError={(e) => { if (e.currentTarget.src !== 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?q=80&w=800&auto=format&fit=crop') e.currentTarget.src = 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?q=80&w=800&auto=format&fit=crop'; }} alt={model.title || 'Kitchen Model'} />
                 <span>{model.number || String(index + 1).padStart(2, '0')}</span>
               </div>
               <div className="collection-copy">
