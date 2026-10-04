@@ -232,7 +232,7 @@ h1 em, h2 em { color: var(--accent); font-weight: 500; }
   color: var(--ink);
   margin: 20px 0;
 }
-.package-price strike {
+.package-price s {
   font-size: 18px;
   color: var(--muted);
 }

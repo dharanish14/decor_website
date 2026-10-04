@@ -415,6 +415,21 @@ function ContentTab({ content, setField, updateCollection, updateProject, upload
 
       <div className="bg-white p-5">
         <div className="mb-4 flex justify-between">
+          <h3 className="font-serif text-2xl">Homepage Room Categories</h3>
+          <p className="text-sm text-[#6c756e]">Edit the main navigation cards on the homepage.</p>
+        </div>
+        {(content.roomCategories || []).map((item, index) => (
+          <div className="grid gap-3 border-t border-[#eeeae2] py-4 sm:grid-cols-2" key={item.id}>
+            {text('Title', item.title, value => { const arr = [...content.roomCategories]; arr[index] = { ...arr[index], title: value }; setField('roomCategories', arr); })}
+            {text('Link URL', item.link, value => { const arr = [...content.roomCategories]; arr[index] = { ...arr[index], link: value }; setField('roomCategories', arr); })}
+            {image('Image', item.image, url => { const arr = [...content.roomCategories]; arr[index] = { ...arr[index], image: url }; const next = { ...content, roomCategories: arr }; setField('roomCategories', arr); return next; }, `category-${item.id}`)}
+            {text('Description', item.copy, value => { const arr = [...content.roomCategories]; arr[index] = { ...arr[index], copy: value }; setField('roomCategories', arr); }, true)}
+          </div>
+        ))}
+      </div>
+
+      <div className="bg-white p-5 mt-6">
+        <div className="mb-4 flex justify-between">
           <h3 className="font-serif text-2xl">Collections</h3>
           <button onClick={() => { const next = { ...content, collections: [...content.collections, { id: `collection-${Date.now()}`, number: String(content.collections.length + 1).padStart(2, '0'), title: 'New collection', copy: '', image: '' }] }; setField('collections', next.collections); void publish(next); }} className="flex items-center gap-1 bg-[#25302c] px-3 py-2 text-xs font-bold uppercase text-white"><Plus size={14} /> Add</button>
         </div>

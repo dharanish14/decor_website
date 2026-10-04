@@ -71,11 +71,28 @@ export default function HomePage() {
 
       <section className="hero" id="top"><div className="hero-copy"><p className="eyebrow"><span /> {content.heroEyebrow}</p><h1>{content.heroTitle}<br /><em>{content.heroEmphasis}</em></h1><p className="hero-intro">{content.heroIntro}</p><div className="hero-actions"><a className="button button-dark" href="#contact">Free Estimation <ArrowUpRight size={17} /></a><a className="text-link" href="#packages">View 30% Off Packages <ChevronDown size={16} /></a></div><div className="hero-note"><Sparkles size={16} /> {content.heroNote}</div></div><div className="hero-image-wrap">{heroImages.map((image, index) => <img key={`${image}-${index}`} className={`hero-image ${index === heroIndex % heroImages.length ? 'is-active' : ''}`} src={image} onError={event => { const fallback = INITIAL_PUBLIC_CONTENT.heroImages[index % INITIAL_PUBLIC_CONTENT.heroImages.length]; if (event.currentTarget.src !== fallback) event.currentTarget.src = fallback; }} alt="Warm, layered living room with curtains and a sofa" />)}<div className="hero-caption"><span>{String((heroIndex % heroImages.length) + 1).padStart(2, '0')} / {String(heroImages.length).padStart(2, '0')}</span><span>Living beautifully, daily</span></div><div className="hero-dots">{heroImages.map((image, index) => <button key={image} className={index === heroIndex % heroImages.length ? 'is-active' : ''} onClick={() => setHeroIndex(index)} aria-label={`Show image ${index + 1}`} />)}</div></div></section>
 
-      <section style={{ padding: '40px 5vw', display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap', background: 'var(--paper)' }}>
-        <a href="/kitchen" className="button button-light" style={{ border: '1px solid var(--line)' }}>Kitchen Models</a>
-        <a href="/bedroom" className="button button-light" style={{ border: '1px solid var(--line)' }}>Bedroom Models</a>
-        <a href="/living-room" className="button button-light" style={{ border: '1px solid var(--line)' }}>Living Room Models</a>
-        <a href="/dining" className="button button-light" style={{ border: '1px solid var(--line)' }}>Dining Models</a>
+      <section className="section collection-section" id="room-categories">
+        <div className="section-heading">
+          <p className="eyebrow"><span /> Spaces</p>
+          <h2>Explore our<br /><em>Design Categories</em></h2>
+          <p>Discover tailored models and layouts for every room in your home.</p>
+        </div>
+        <div className="collection-grid">
+          {(content.roomCategories || []).map((cat) => (
+            <article className="collection-card" key={cat.id}>
+              <a href={cat.link} className="block" style={{ textDecoration: 'none' }}>
+                <div className="collection-image">
+                  <img src={normalizeImageUrl(cat.image)} alt={cat.title} />
+                </div>
+                <div className="collection-copy">
+                  <h3>{cat.title}</h3>
+                  <p>{cat.copy}</p>
+                  <ArrowUpRight size={19} />
+                </div>
+              </a>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className="trust-strip">{content.trustItems.map(item => <span key={item}>{item}</span>)}</section>
@@ -100,7 +117,7 @@ export default function HomePage() {
           <article className="package-card">
             <div className="package-badge">-30%</div>
             <h3>1 BHK Essential</h3>
-            <div className="package-price"><strike>₹1,00,000</strike><br/>₹70,000</div>
+            <div className="package-price"><s>₹1,00,000</s><br/>₹70,000</div>
             <ul className="package-features">
               <li>Modular Kitchen (Base + Wall)</li>
               <li>1 Wardrobe (Sliding)</li>
@@ -111,7 +128,7 @@ export default function HomePage() {
           <article className="package-card">
             <div className="package-badge">-30%</div>
             <h3>2 BHK Essential</h3>
-            <div className="package-price"><strike>₹2,50,000</strike><br/>₹1,75,000</div>
+            <div className="package-price"><s>₹2,50,000</s><br/>₹1,75,000</div>
             <ul className="package-features">
               <li>Modular Kitchen with Accessories</li>
               <li>2 Wardrobes (Premium Finish)</li>
@@ -122,7 +139,7 @@ export default function HomePage() {
           <article className="package-card">
             <div className="package-badge">-30%</div>
             <h3>3 BHK Premium</h3>
-            <div className="package-price"><strike>₹4,00,000</strike><br/>₹2,80,000</div>
+            <div className="package-price"><s>₹4,00,000</s><br/>₹2,80,000</div>
             <ul className="package-features">
               <li>Luxury Island Kitchen</li>
               <li>3 Wardrobes with Loft</li>

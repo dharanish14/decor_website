@@ -95,6 +95,7 @@ export interface PublicSiteContent {
   bedroomModels: CollectionItem[];
   livingRoomModels: CollectionItem[];
   diningModels: CollectionItem[];
+  roomCategories: { id: string; title: string; copy: string; image: string; link: string }[];
   effects: {
     revealOnScroll: boolean;
     imageHoverZoom: boolean;
@@ -162,6 +163,12 @@ export const INITIAL_PUBLIC_CONTENT: PublicSiteContent = {
   ],
   diningModels: [
     { id: 'd1', number: '01', title: 'Classic Wood', copy: 'Six-seater solid oak dining set.', image: 'https://images.unsplash.com/photo-1617806118233-18e1c0945594?q=80&w=600&auto=format&fit=crop' }
+  ],
+  roomCategories: [
+    { id: 'cat-kitchen', title: 'Kitchens', copy: 'Modern, modular, and built for your culinary journey.', image: 'https://images.unsplash.com/photo-1556910103-1c02745a872f?q=80&w=600&auto=format&fit=crop', link: '/kitchen' },
+    { id: 'cat-bedroom', title: 'Bedrooms', copy: 'Restful spaces tailored to your comfort.', image: 'https://images.unsplash.com/photo-1505693314120-0d443867891c?q=80&w=600&auto=format&fit=crop', link: '/bedroom' },
+    { id: 'cat-living', title: 'Living Rooms', copy: 'The heart of your home, designed for living.', image: 'https://images.unsplash.com/photo-1583847268964-b28ce8f52859?q=80&w=600&auto=format&fit=crop', link: '/living-room' },
+    { id: 'cat-dining', title: 'Dining', copy: 'Elegant settings for everyday meals and gatherings.', image: 'https://images.unsplash.com/photo-1617806118233-18e1c0945594?q=80&w=600&auto=format&fit=crop', link: '/dining' }
   ],
   effects: { revealOnScroll: true, imageHoverZoom: true, floatingAccent: true },
 };
