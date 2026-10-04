@@ -464,6 +464,38 @@ function ContentTab({ content, setField, updateCollection, updateProject, upload
         {text('Hero intro', content.heroIntro, value => setField('heroIntro', value), true)}
       </div>
 
+      <div className="bg-white p-5 rounded shadow-sm border border-[#eeeae2]">
+        <h3 className="mb-2 font-serif text-2xl">Hero Slideshow Images</h3>
+        <p className="mb-4 text-xs text-[#6c756e]">Manage the background images for the main top section.</p>
+        <div className="space-y-4">
+          {(content.heroImages || []).map((imgUrl, i) => (
+            <div key={i} className="relative bg-[#faf8f5] p-3 rounded border border-[#d8d4ca]">
+              {image(`Slide ${i + 1}`, imgUrl, url => {
+                const arr = [...(content.heroImages || [])];
+                arr[i] = url;
+                const nextContent = { ...content, heroImages: arr };
+                setField('heroImages', arr);
+                return nextContent;
+              }, `hero-${i}`)}
+              <button 
+                onClick={() => {
+                  const arr = [...(content.heroImages || [])];
+                  arr.splice(i, 1);
+                  const nextContent = { ...content, heroImages: arr };
+                  setField('heroImages', arr);
+                  void publish(nextContent);
+                }}
+                className="absolute top-3 right-3 text-xs px-2 py-1 bg-[#f8e4df] text-[#9d442d] rounded font-bold hover:bg-[#f1c3b8]"
+              >Remove</button>
+            </div>
+          ))}
+          <button 
+            onClick={() => setField('heroImages', [...(content.heroImages || []), ''])}
+            className="flex items-center gap-1 bg-[#25302c] px-3 py-2 text-xs font-bold uppercase text-white rounded"
+          >+ Add Slide</button>
+        </div>
+      </div>
+
       {renderList('roomCategories', 'Homepage Room Categories', 'Edit the main navigation cards on the homepage.', { title: 'New Category', link: '/', image: '', copy: '' })}
       {renderList('packages', 'Special Offers (Packages)', 'Edit the 30% off packages shown on the homepage.', { title: 'New Package', badge: '-30%', oldPrice: '₹0', newPrice: '₹0', features: ['Feature 1'] })}
       
