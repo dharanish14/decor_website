@@ -11,7 +11,7 @@ export default function ContactForm({ asModal = false, onClose }: { asModal?: bo
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [waUrl, setWaUrl] = useState('');
-  const [contactPhone, setContactPhone] = useState('+91 98400 12345');
+  const [contactPhone, setContactPhone] = useState('+91 79046 14023');
   const [adminNotificationEmail, setAdminNotificationEmail] = useState('dharaanish@gmail.com');
   const [smtpUser, setSmtpUser] = useState('monovawebsite@gmail.com');
   const [smtpPass, setSmtpPass] = useState('');
@@ -72,7 +72,7 @@ export default function ContactForm({ asModal = false, onClose }: { asModal?: bo
     };
 
     // Format optional WhatsApp alert link
-    const cleanDigits = (contactPhone || '+91 98400 12345').replace(/[^0-9]/g, '');
+    const cleanDigits = (contactPhone || '+91 79046 14023').replace(/[^0-9]/g, '');
     const fullWaPhone = cleanDigits.length === 10 ? `91${cleanDigits}` : cleanDigits;
     const waText = `*New Website Enquiry - Elshadai Decors*\n\n👤 *Name:* ${lead.name}\n📞 *Phone:* ${lead.phone}\n📧 *Email:* ${lead.email}\n🛋️ *Looking for:* ${lead.serviceType}\n💬 *Details:* ${lead.message || 'No additional details'}`;
     const generatedWaUrl = `https://wa.me/${fullWaPhone}?text=${encodeURIComponent(waText)}`;

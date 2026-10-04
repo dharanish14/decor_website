@@ -143,7 +143,7 @@ export const INITIAL_PUBLIC_CONTENT: PublicSiteContent = {
     { id: 'project-4', title: 'A more considered window', type: 'Sheers & blackout · Chennai', image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=1400&auto=format&fit=crop' },
   ],
   address: 'Elshadai Decors\nNear MGR Statue, opposite Pillayar Kovil\nK.K. Nagar, Chennai',
-  contactPhone: '+91 98400 12345',
+  contactPhone: '+91 79046 14023',
   adminNotificationEmail: 'dharaanish@gmail.com',
   smtpUser: 'monovawebsite@gmail.com',
   smtpPass: '',
