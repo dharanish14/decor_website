@@ -58,14 +58,14 @@ export default function HomePage() {
       <header className="site-header">
         <a href="#top" className="brand" aria-label="Elshadai Decors home"><span className="brand-mark">E</span><span><strong>{content.brandName}</strong><small>{content.brandDescriptor}</small></span></a>
         <nav className={menuOpen ? 'main-nav is-open' : 'main-nav'}>
-          <a href="/kitchen">Kitchen</a><a href="/bedroom">Bedroom</a><a href="/living-room">Living Room</a><a href="/dining">Dining</a><a href="#packages" onClick={() => setMenuOpen(false)}>Packages</a><a href="#contact" onClick={() => setMenuOpen(false)}>Free Estimation</a>
-        </nav>
+            <a href="/">Home</a><a href="/kitchen">Kitchen</a><a href="/bedroom">Bedroom</a><a href="/living-room">Living Room</a><a href="/dining">Dining</a><a href="/#packages" onClick={() => setMenuOpen(false)}>Packages</a><a href="/#contact" onClick={() => setMenuOpen(false)}>Contact</a>
+          </nav>
         <div className="header-actions">
           {content.contactPhone && (
-            <a href={`tel:${content.contactPhone.replace(/\s/g, '')}`} className="flex items-center gap-1.5 text-xs font-bold text-[#25302c] hover:text-[#c8714d] transition-colors" style={{ textDecoration: 'none' }}>
-              <Phone size={14} /> {content.contactPhone}
-            </a>
-          )}
+              <a href={`tel:${content.contactPhone.replace(/\s/g, '')}`} className="flex items-center gap-1.5 text-xs font-bold text-[#25302c] hover:text-[#c8714d] transition-colors" style={{ textDecoration: 'none' }}>
+                <Phone size={14} /> <span className="hidden sm:inline">{content.contactPhone}</span>
+              </a>
+            )}
           <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">{menuOpen ? <X /> : <Menu />}</button>
         </div>
       </header>
