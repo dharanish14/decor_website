@@ -56,7 +56,7 @@ export default function HomePage() {
   return (
     <main className={`site-shell ${content.effects.imageHoverZoom ? 'effect-image-zoom' : 'no-image-zoom'} ${content.effects.revealOnScroll ? 'effect-reveal' : ''} ${content.effects.floatingAccent ? 'effect-floating' : ''}`}>
       <header className="site-header">
-        <a href="/" className="brand" aria-label="Elshadai Decors home"><img src="/logo.png" alt="Elshadai Decors" style={{ height: '40px', width: 'auto' }} /></a>
+        <a href="/" className="brand" aria-label="Elshadai Decors home"><img src="/logo.png" alt="Elshadai Decors" style={{ height: '140px', width: 'auto', margin: '-50px -10px' }} /></a>
         <nav className={menuOpen ? 'main-nav is-open' : 'main-nav'}>
             <a href="/">Home</a><a href="/#projects">Our Work</a><a href="/#packages" onClick={() => setMenuOpen(false)}>Packages</a><a href="/#contact" onClick={() => setMenuOpen(false)}>Contact</a>
           </nav>
@@ -140,7 +140,7 @@ export default function HomePage() {
         </a>
       </div>
 
-      <ContactForm />{enquiryOpen && <ContactForm asModal={true} onClose={() => setEnquiryOpen(false)} />}<footer className="site-footer"><div className="footer-brand"><img src="/logo.png" alt="Elshadai Decors" style={{ height: '40px', width: 'auto' }} /></div><p>Window treatments, upholstery, and considered home furnishings in Chennai.{content.contactPhone && <> · 📞 <a href={`tel:${content.contactPhone.replace(/\s/g, '')}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{content.contactPhone}</a></>}</p><div className="footer-links"><a href={content.instagramUrl} target="_blank" rel="noreferrer"><Instagram size={16} /> Instagram</a><a href="#contact">Enquire</a><span>© {new Date().getFullYear()} Elshadai Decors</span></div></footer>
+      <ContactForm />{enquiryOpen && <ContactForm asModal={true} onClose={() => setEnquiryOpen(false)} />}<footer className="site-footer"><div className="footer-brand"><img src="/logo.png" alt="Elshadai Decors" style={{ height: '140px', width: 'auto', margin: '-50px -10px' }} /></div><p>Window treatments, upholstery, and considered home furnishings in Chennai.{content.contactPhone && <> · 📞 <a href={`tel:${content.contactPhone.replace(/\s/g, '')}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{content.contactPhone}</a></>}</p><div className="footer-links"><a href={content.instagramUrl} target="_blank" rel="noreferrer"><Instagram size={16} /> Instagram</a><a href="#contact">Enquire</a><span>© {new Date().getFullYear()} Elshadai Decors</span></div></footer>
     </main>
   );
 }
