@@ -39,7 +39,7 @@ export default function BedroomPage() {
           {((content.bedroomModels?.length ? content.bedroomModels : INITIAL_PUBLIC_CONTENT.bedroomModels) || []).map((model, index) => (
             <article className="collection-card" key={model.id || index}>
               <div className="collection-image">
-                <img src={normalizeImageUrl(model.image) || 'https://images.unsplash.com/photo-1505693314120-0d443867891c?q=80&w=800&auto=format&fit=crop'} alt={model.title || 'Bedroom Model'} />
+                <img src={normalizeImageUrl(model.image) || 'https://images.unsplash.com/photo-1505693314120-0d443867891c?q=80&w=800&auto=format&fit=crop'} onError={(e) => { if (e.currentTarget.src !== 'https://images.unsplash.com/photo-1505693314120-0d443867891c?q=80&w=800&auto=format&fit=crop') e.currentTarget.src = 'https://images.unsplash.com/photo-1505693314120-0d443867891c?q=80&w=800&auto=format&fit=crop'; }} alt={model.title || 'Bedroom Model'} />
                 <span>{model.number || String(index + 1).padStart(2, '0')}</span>
               </div>
               <div className="collection-copy">

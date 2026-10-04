@@ -39,7 +39,7 @@ export default function DiningPage() {
           {((content.diningModels?.length ? content.diningModels : INITIAL_PUBLIC_CONTENT.diningModels) || []).map((model, index) => (
             <article className="collection-card" key={model.id || index}>
               <div className="collection-image">
-                <img src={normalizeImageUrl(model.image) || 'https://images.unsplash.com/photo-1617806118233-18e1c0945594?q=80&w=800&auto=format&fit=crop'} alt={model.title || 'Dining Model'} />
+                <img src={normalizeImageUrl(model.image) || 'https://images.unsplash.com/photo-1617806118233-18e1c0945594?q=80&w=800&auto=format&fit=crop'} onError={(e) => { if (e.currentTarget.src !== 'https://images.unsplash.com/photo-1617806118233-18e1c0945594?q=80&w=800&auto=format&fit=crop') e.currentTarget.src = 'https://images.unsplash.com/photo-1617806118233-18e1c0945594?q=80&w=800&auto=format&fit=crop'; }} alt={model.title || 'Dining Model'} />
                 <span>{model.number || String(index + 1).padStart(2, '0')}</span>
               </div>
               <div className="collection-copy">
