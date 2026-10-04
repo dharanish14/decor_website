@@ -5,12 +5,7 @@ const dataUri = 'data:image/png;base64,' + base64;
 const newGeneratePDF = `const generatePDF = () => {
     const doc = new jsPDF();
     
-    // Top Left
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(24);
-    doc.text('TAX INVOICE', 14, 25);
-    doc.setFontSize(9);
-    doc.text(\`Invoice# INV-\${Date.now().toString().slice(-6)}\`, 14, 32);
+    // Top Left - Removed TAX INVOICE and Invoice# as requested
     
     doc.setFontSize(8);
     doc.text('Balance Due', 14, 45);
@@ -21,8 +16,8 @@ const newGeneratePDF = `const generatePDF = () => {
     // Top Right (Company & Logo)
     const rightX = 195;
     
-    // Logo Image
-    doc.addImage('${dataUri}', 'PNG', rightX - 50, 15, 50, 15);
+    // Logo Image - Fixed aspect ratio to make it look good (Square-ish, 25x25)
+    doc.addImage('${dataUri}', 'PNG', rightX - 25, 10, 25, 25);
     
     doc.setFontSize(8);
     doc.setFont('helvetica', 'normal');
@@ -47,7 +42,7 @@ const newGeneratePDF = `const generatePDF = () => {
     // Invoice Meta (Left)
     doc.setFontSize(8);
     doc.setTextColor(100, 100, 100);
-    doc.text('Invoice Date :', 14, 85);
+    doc.text('Estimate Date :', 14, 85);
     doc.text('Terms :', 14, 90);
     doc.text('Due Date :', 14, 95);
     
@@ -109,7 +104,7 @@ const newGeneratePDF = `const generatePDF = () => {
 
     const finalY = (doc as any).lastAutoTable?.finalY || 120;
     
-    doc.save(\`Invoice_\${customer.name.replace(/\\s+/g, '_')}_\${customer.date}.pdf\`);
+    doc.save(\`Estimate_\${customer.name.replace(/\\s+/g, '_')}_\${customer.date}.pdf\`);
   };`;
 
 fs.writeFileSync('newGeneratePDF.js', newGeneratePDF);
