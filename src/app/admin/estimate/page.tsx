@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { Plus, Trash2, FileText, Table as TableIcon, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -79,7 +79,7 @@ export default function EstimateGenerator() {
       (item.quantity * item.unitPrice).toLocaleString('en-IN')
     ]);
 
-    (doc as any).autoTable({
+    autoTable(doc, {
       head: [tableColumn],
       body: tableRows,
       startY: 75,
@@ -88,7 +88,7 @@ export default function EstimateGenerator() {
       headStyles: { fillColor: [37, 48, 44] }
     });
 
-    const finalY = (doc as any).lastAutoTable.finalY || 75;
+    const finalY = (doc as any).lastAutoTable?.finalY || 75;
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     doc.text(`Grand Total: INR ${totalAmount.toLocaleString('en-IN')}`, 14, finalY + 15);
