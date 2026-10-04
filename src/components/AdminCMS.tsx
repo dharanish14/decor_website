@@ -428,6 +428,27 @@ function ContentTab({ content, setField, updateCollection, updateProject, upload
         ))}
       </div>
 
+      {(['kitchenModels', 'bedroomModels', 'livingRoomModels', 'diningModels'] as const).map(key => {
+        const titleMap = { kitchenModels: 'Kitchen Models', bedroomModels: 'Bedroom Models', livingRoomModels: 'Living Room Models', diningModels: 'Dining Models' };
+        const collection = content[key] || [];
+        return (
+          <div className="bg-white p-5 mt-6" key={key}>
+            <div className="mb-4 flex justify-between">
+              <h3 className="font-serif text-2xl">{titleMap[key]}</h3>
+              <button onClick={() => { const next = { ...content, [key]: [...collection, { id: `${key}-${Date.now()}`, number: String(collection.length + 1).padStart(2, '0'), title: 'New Model', copy: '', image: '' }] }; setField(key, next[key]); void publish(next); }} className="flex items-center gap-1 bg-[#25302c] px-3 py-2 text-xs font-bold uppercase text-white"><Plus size={14} /> Add</button>
+            </div>
+            {collection.map((item, index) => (
+              <div className="grid gap-3 border-t border-[#eeeae2] py-4 sm:grid-cols-2" key={item.id}>
+                {text('Title', item.title, value => { const arr = [...collection]; arr[index] = { ...arr[index], title: value }; setField(key, arr); })}
+                {image('Image', item.image, url => { const arr = [...collection]; arr[index] = { ...arr[index], image: url }; const next = { ...content, [key]: arr }; setField(key, next[key]); return next; }, `${item.id}`)}
+                {text('Description', item.copy, value => { const arr = [...collection]; arr[index] = { ...arr[index], copy: value }; setField(key, arr); }, true)}
+                <button onClick={() => { const arr = collection.filter(row => row.id !== item.id); const next = { ...content, [key]: arr }; setField(key, arr); void publish(next); }} className="flex items-center gap-1 text-xs text-[#c8714d]"><Trash2 size={14} /> Delete model</button>
+              </div>
+            ))}
+          </div>
+        );
+      })}
+
       <div className="bg-white p-5">
         <h3 className="mb-3 font-serif text-2xl">Our approach / Story section</h3>
         <div className="grid gap-4 sm:grid-cols-2">

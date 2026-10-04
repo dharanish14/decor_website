@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ArrowUpRight, Check, ChevronDown, Instagram, MapPin, Menu, Phone, Sparkles, X } from 'lucide-react';
+import { ArrowUpRight, Check, ChevronDown, Instagram, MapPin, Menu, Phone, Sparkles, X, MessageCircle } from 'lucide-react';
 import ContactForm from '@/components/ContactForm';
 import { INITIAL_PUBLIC_CONTENT, normalizeImageUrl, PublicSiteContent } from '@/lib/dataStore';
 
@@ -57,7 +57,7 @@ export default function HomePage() {
       <header className="site-header">
         <a href="#top" className="brand" aria-label="Elshadai Decors home"><span className="brand-mark">E</span><span><strong>{content.brandName}</strong><small>{content.brandDescriptor}</small></span></a>
         <nav className={menuOpen ? 'main-nav is-open' : 'main-nav'}>
-          <a href="#collections" onClick={() => setMenuOpen(false)}>Collections</a><a href="#story" onClick={() => setMenuOpen(false)}>Our approach</a><a href="#projects" onClick={() => setMenuOpen(false)}>Inspiration</a><a href="#contact" onClick={() => setMenuOpen(false)}>Visit / enquire</a>
+          <a href="/kitchen">Kitchen</a><a href="/bedroom">Bedroom</a><a href="/living-room">Living Room</a><a href="/dining">Dining</a><a href="#packages" onClick={() => setMenuOpen(false)}>Packages</a><a href="#contact" onClick={() => setMenuOpen(false)}>Free Estimation</a>
         </nav>
         <div className="header-actions">
           {content.contactPhone && (
@@ -69,7 +69,14 @@ export default function HomePage() {
         </div>
       </header>
 
-      <section className="hero" id="top"><div className="hero-copy"><p className="eyebrow"><span /> {content.heroEyebrow}</p><h1>{content.heroTitle}<br /><em>{content.heroEmphasis}</em></h1><p className="hero-intro">{content.heroIntro}</p><div className="hero-actions"><a className="button button-dark" href="#contact">Start a conversation <ArrowUpRight size={17} /></a><a className="text-link" href="#collections">Explore collections <ChevronDown size={16} /></a></div><div className="hero-note"><Sparkles size={16} /> {content.heroNote}</div></div><div className="hero-image-wrap">{heroImages.map((image, index) => <img key={`${image}-${index}`} className={`hero-image ${index === heroIndex % heroImages.length ? 'is-active' : ''}`} src={image} onError={event => { const fallback = INITIAL_PUBLIC_CONTENT.heroImages[index % INITIAL_PUBLIC_CONTENT.heroImages.length]; if (event.currentTarget.src !== fallback) event.currentTarget.src = fallback; }} alt="Warm, layered living room with curtains and a sofa" />)}<div className="hero-caption"><span>{String((heroIndex % heroImages.length) + 1).padStart(2, '0')} / {String(heroImages.length).padStart(2, '0')}</span><span>Living beautifully, daily</span></div><div className="hero-dots">{heroImages.map((image, index) => <button key={image} className={index === heroIndex % heroImages.length ? 'is-active' : ''} onClick={() => setHeroIndex(index)} aria-label={`Show image ${index + 1}`} />)}</div></div></section>
+      <section className="hero" id="top"><div className="hero-copy"><p className="eyebrow"><span /> {content.heroEyebrow}</p><h1>{content.heroTitle}<br /><em>{content.heroEmphasis}</em></h1><p className="hero-intro">{content.heroIntro}</p><div className="hero-actions"><a className="button button-dark" href="#contact">Free Estimation <ArrowUpRight size={17} /></a><a className="text-link" href="#packages">View 30% Off Packages <ChevronDown size={16} /></a></div><div className="hero-note"><Sparkles size={16} /> {content.heroNote}</div></div><div className="hero-image-wrap">{heroImages.map((image, index) => <img key={`${image}-${index}`} className={`hero-image ${index === heroIndex % heroImages.length ? 'is-active' : ''}`} src={image} onError={event => { const fallback = INITIAL_PUBLIC_CONTENT.heroImages[index % INITIAL_PUBLIC_CONTENT.heroImages.length]; if (event.currentTarget.src !== fallback) event.currentTarget.src = fallback; }} alt="Warm, layered living room with curtains and a sofa" />)}<div className="hero-caption"><span>{String((heroIndex % heroImages.length) + 1).padStart(2, '0')} / {String(heroImages.length).padStart(2, '0')}</span><span>Living beautifully, daily</span></div><div className="hero-dots">{heroImages.map((image, index) => <button key={image} className={index === heroIndex % heroImages.length ? 'is-active' : ''} onClick={() => setHeroIndex(index)} aria-label={`Show image ${index + 1}`} />)}</div></div></section>
+
+      <section style={{ padding: '40px 5vw', display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap', background: 'var(--paper)' }}>
+        <a href="/kitchen" className="button button-light" style={{ border: '1px solid var(--line)' }}>Kitchen Models</a>
+        <a href="/bedroom" className="button button-light" style={{ border: '1px solid var(--line)' }}>Bedroom Models</a>
+        <a href="/living-room" className="button button-light" style={{ border: '1px solid var(--line)' }}>Living Room Models</a>
+        <a href="/dining" className="button button-light" style={{ border: '1px solid var(--line)' }}>Dining Models</a>
+      </section>
 
       <section className="trust-strip">{content.trustItems.map(item => <span key={item}>{item}</span>)}</section>
 
@@ -82,6 +89,53 @@ export default function HomePage() {
       <section className="visit-section"><div><p className="eyebrow"><MapPin size={16} /> Come by</p><h2>Let’s find your<br /><em>room’s rhythm.</em></h2>{content.contactPhone && <a className="direct-phone" href={`tel:${content.contactPhone.replace(/\s/g, '')}`}><Phone size={17} /> {content.contactPhone}</a>}</div><div className="visit-details"><p>{content.address}</p><a className="button button-light" href="https://www.google.com/maps/search/?api=1&query=Elshadai+Decors+K.K.+Nagar+Chennai" target="_blank" rel="noreferrer">Get directions <ArrowUpRight size={17} /></a></div></section>
 
       <section className="map-section"><div className="map-heading"><p className="eyebrow"><MapPin size={16} /> Find us in Chennai</p><h2>Near MGR Statue,<br /><em>K.K. Nagar.</em></h2><p>Use the map to plan your visit. The pin is set near the listed Elshadai Decors location in Nesapakkam.</p></div><div className="map-frame"><iframe title="Elshadai Decors satellite location" src="https://www.google.com/maps?q=13.030309,80.190689&z=17&t=k&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" /><a className="map-open" href="https://www.google.com/maps/@13.030309,80.190689,17z/data=!3m1!1e3" target="_blank" rel="noreferrer">Open satellite view <ArrowUpRight size={15} /></a></div></section>
+
+      <section className="packages-section" id="packages">
+        <div className="section-heading">
+          <p className="eyebrow"><span /> Special Offers</p>
+          <h2>Flat 30% Off<br /><em>On Essential Packages</em></h2>
+          <p>Get everything essential for your new home at unbeatable prices.</p>
+        </div>
+        <div className="collection-grid">
+          <article className="package-card">
+            <div className="package-badge">-30%</div>
+            <h3>1 BHK Essential</h3>
+            <div className="package-price"><strike>₹1,00,000</strike><br/>₹70,000</div>
+            <ul className="package-features">
+              <li>Modular Kitchen (Base + Wall)</li>
+              <li>1 Wardrobe (Sliding)</li>
+              <li>TV Unit (Basic)</li>
+            </ul>
+            <a className="button button-dark" style={{width: '100%', justifyContent: 'center'}} href="#contact">Get Free Estimate</a>
+          </article>
+          <article className="package-card">
+            <div className="package-badge">-30%</div>
+            <h3>2 BHK Essential</h3>
+            <div className="package-price"><strike>₹2,50,000</strike><br/>₹1,75,000</div>
+            <ul className="package-features">
+              <li>Modular Kitchen with Accessories</li>
+              <li>2 Wardrobes (Premium Finish)</li>
+              <li>TV Unit & Shoe Rack</li>
+            </ul>
+            <a className="button button-dark" style={{width: '100%', justifyContent: 'center'}} href="#contact">Get Free Estimate</a>
+          </article>
+          <article className="package-card">
+            <div className="package-badge">-30%</div>
+            <h3>3 BHK Premium</h3>
+            <div className="package-price"><strike>₹4,00,000</strike><br/>₹2,80,000</div>
+            <ul className="package-features">
+              <li>Luxury Island Kitchen</li>
+              <li>3 Wardrobes with Loft</li>
+              <li>Custom Living Room Setup</li>
+            </ul>
+            <a className="button button-dark" style={{width: '100%', justifyContent: 'center'}} href="#contact">Get Free Estimate</a>
+          </article>
+        </div>
+      </section>
+
+      <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer" className="whatsapp-float" aria-label="Chat on WhatsApp">
+        <MessageCircle size={24} />
+      </a>
 
       <ContactForm /><footer className="site-footer"><div className="footer-brand"><span className="brand-mark">E</span><span><strong>{content.brandName}</strong><small>{content.brandDescriptor}</small></span></div><p>Window treatments, upholstery, and considered home furnishings in Chennai.{content.contactPhone && <> · 📞 <a href={`tel:${content.contactPhone.replace(/\s/g, '')}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{content.contactPhone}</a></>}</p><div className="footer-links"><a href={content.instagramUrl} target="_blank" rel="noreferrer"><Instagram size={16} /> Instagram</a><a href="#contact">Enquire</a><span>© {new Date().getFullYear()} Elshadai Decors</span></div></footer>
     </main>

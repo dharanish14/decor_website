@@ -91,6 +91,10 @@ export interface PublicSiteContent {
   adminPassword?: string;
   instagramUrl: string;
   justdialUrl: string;
+  kitchenModels: CollectionItem[];
+  bedroomModels: CollectionItem[];
+  livingRoomModels: CollectionItem[];
+  diningModels: CollectionItem[];
   effects: {
     revealOnScroll: boolean;
     imageHoverZoom: boolean;
@@ -147,6 +151,18 @@ export const INITIAL_PUBLIC_CONTENT: PublicSiteContent = {
   adminPassword: 'change-me-now',
   instagramUrl: 'https://www.instagram.com/elshadai_decors/',
   justdialUrl: 'https://www.justdial.com/Chennai/Elshadai-Decors-Near-Mgr-Statue-Opp-to-Pillayar-Kovil-K-K-Nagar/044PXX44-XX44-091119153916-B3B2_BZDET',
+  kitchenModels: [
+    { id: 'k1', number: '01', title: 'Modern L-Shape', copy: 'Sleek handleless design with quartz top.', image: 'https://images.unsplash.com/photo-1556910103-1c02745a872f?q=80&w=600&auto=format&fit=crop' }
+  ],
+  bedroomModels: [
+    { id: 'b1', number: '01', title: 'Minimalist Haven', copy: 'Platform bed with warm wooden tones.', image: 'https://images.unsplash.com/photo-1505693314120-0d443867891c?q=80&w=600&auto=format&fit=crop' }
+  ],
+  livingRoomModels: [
+    { id: 'l1', number: '01', title: 'Cozy Scandinavian', copy: 'Bright and airy setup with plush seating.', image: 'https://images.unsplash.com/photo-1583847268964-b28ce8f52859?q=80&w=600&auto=format&fit=crop' }
+  ],
+  diningModels: [
+    { id: 'd1', number: '01', title: 'Classic Wood', copy: 'Six-seater solid oak dining set.', image: 'https://images.unsplash.com/photo-1617806118233-18e1c0945594?q=80&w=600&auto=format&fit=crop' }
+  ],
   effects: { revealOnScroll: true, imageHoverZoom: true, floatingAccent: true },
 };
 
