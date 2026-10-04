@@ -1,7 +1,7 @@
 'use client';
 
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { Check, Download, ImagePlus, Lock, LogOut, Plus, Save, Settings, ShieldAlert, Trash2, Unlock, Upload, UserRound } from 'lucide-react';
+import { Check, Download, ImagePlus, Lock, LogOut, Plus, Save, Settings, ShieldAlert, Trash2, Unlock, Upload, UserRound, FileText } from 'lucide-react';
 import { exportLeadsToExcel } from '@/lib/excelExport';
 import { INITIAL_PUBLIC_CONTENT, LeadSubmission, normalizeImageUrl, PublicSiteContent } from '@/lib/dataStore';
 
@@ -241,6 +241,7 @@ export default function AdminCMS() {
           <div className="flex gap-2">
             <button onClick={() => void publish()} className="flex items-center gap-2 bg-[#25302c] px-4 py-2.5 text-xs font-bold uppercase text-white"><Save size={15} /> Save & Publish</button>
             <button onClick={() => { sessionStorage.removeItem('elshadai_admin_authed'); setAuthenticated(false); }} className="flex items-center gap-2 border border-[#d8d4ca] px-4 py-2.5 text-xs font-bold uppercase"><LogOut size={15} /> Log out</button>
+            <a href="/admin/estimate" className="flex items-center gap-2 bg-[#c8714d] px-4 py-2.5 text-xs font-bold uppercase text-white hover:bg-[#b05d3a]"><FileText size={15} /> Estimate Generator</a>
           </div>
         </header>
         {notice && <div className="fixed right-5 top-5 z-50 flex items-center gap-2 bg-[#25302c] px-4 py-3 text-sm text-white shadow-xl"><Check size={16} /> {notice}</div>}
