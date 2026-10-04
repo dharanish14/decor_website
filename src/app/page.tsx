@@ -56,9 +56,9 @@ export default function HomePage() {
   return (
     <main className={`site-shell ${content.effects.imageHoverZoom ? 'effect-image-zoom' : 'no-image-zoom'} ${content.effects.revealOnScroll ? 'effect-reveal' : ''} ${content.effects.floatingAccent ? 'effect-floating' : ''}`}>
       <header className="site-header">
-        <a href="#top" className="brand" aria-label="Elshadai Decors home"><span className="brand-mark">E</span><span><strong>{content.brandName}</strong><small>{content.brandDescriptor}</small></span></a>
+        <a href="/" className="brand" aria-label="Elshadai Decors home"><img src="/logo.png" alt="Elshadai Decors" style={{ height: '40px', width: 'auto' }} /></a>
         <nav className={menuOpen ? 'main-nav is-open' : 'main-nav'}>
-            <a href="/">Home</a><a href="/kitchen">Kitchen</a><a href="/bedroom">Bedroom</a><a href="/living-room">Living Room</a><a href="/dining">Dining</a><a href="/#packages" onClick={() => setMenuOpen(false)}>Packages</a><a href="/#contact" onClick={() => setMenuOpen(false)}>Contact</a>
+            <a href="/">Home</a><a href="/#projects">Our Work</a><a href="/#packages" onClick={() => setMenuOpen(false)}>Packages</a><a href="/#contact" onClick={() => setMenuOpen(false)}>Contact</a>
           </nav>
         <div className="header-actions">
           {content.contactPhone && (
