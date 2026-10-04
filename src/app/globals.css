@@ -206,6 +206,21 @@ h1 em, h2 em { color: var(--accent); font-weight: 500; }
 }
 .enquiry-float {
   background-color: var(--ink);
+  color: white;
+  border-radius: 25px;
+  width: auto;
+  padding: 0 20px;
+  font-size: 14px;
+  font-weight: bold;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 .whatsapp-float:hover, .enquiry-float:hover {
   transform: scale(1.1);

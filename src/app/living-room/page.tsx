@@ -36,11 +36,11 @@ export default function LivingRoomPage() {
           <p>Discover the latest models available for your living room.</p>
         </div>
         <div className="collection-grid">
-          {((content.livingRoomModels?.length ? content.livingRoomModels : INITIAL_PUBLIC_CONTENT.livingRoomModels) || []).map((model) => (
-            <article className="collection-card" key={model.id}>
+          {((content.livingRoomModels?.length ? content.livingRoomModels : INITIAL_PUBLIC_CONTENT.livingRoomModels) || []).map((model, index) => (
+            <article className="collection-card" key={model.id || index}>
               <div className="collection-image">
-                <img src={normalizeImageUrl(model.image)} alt={model.title} />
-                <span>{model.number || '01'}</span>
+                <img src={normalizeImageUrl(model.image) || 'https://images.unsplash.com/photo-1583847268964-b28ce8f52859?q=80&w=800&auto=format&fit=crop'} alt={model.title || 'Living Room Model'} />
+                <span>{model.number || String(index + 1).padStart(2, '0')}</span>
               </div>
               <div className="collection-copy">
                 <h3>{model.title}</h3>

@@ -36,11 +36,11 @@ export default function BedroomPage() {
           <p>Discover the latest models available for your bedroom.</p>
         </div>
         <div className="collection-grid">
-          {((content.bedroomModels?.length ? content.bedroomModels : INITIAL_PUBLIC_CONTENT.bedroomModels) || []).map((model) => (
-            <article className="collection-card" key={model.id}>
+          {((content.bedroomModels?.length ? content.bedroomModels : INITIAL_PUBLIC_CONTENT.bedroomModels) || []).map((model, index) => (
+            <article className="collection-card" key={model.id || index}>
               <div className="collection-image">
-                <img src={normalizeImageUrl(model.image)} alt={model.title} />
-                <span>{model.number || '01'}</span>
+                <img src={normalizeImageUrl(model.image) || 'https://images.unsplash.com/photo-1505693314120-0d443867891c?q=80&w=800&auto=format&fit=crop'} alt={model.title || 'Bedroom Model'} />
+                <span>{model.number || String(index + 1).padStart(2, '0')}</span>
               </div>
               <div className="collection-copy">
                 <h3>{model.title}</h3>

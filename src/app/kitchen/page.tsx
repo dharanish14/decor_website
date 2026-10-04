@@ -36,11 +36,11 @@ export default function KitchenPage() {
           <p>Discover the latest models available for your modern kitchen.</p>
         </div>
         <div className="collection-grid">
-          {((content.kitchenModels?.length ? content.kitchenModels : INITIAL_PUBLIC_CONTENT.kitchenModels) || []).map((model) => (
-            <article className="collection-card" key={model.id}>
+          {((content.kitchenModels?.length ? content.kitchenModels : INITIAL_PUBLIC_CONTENT.kitchenModels) || []).map((model, index) => (
+            <article className="collection-card" key={model.id || index}>
               <div className="collection-image">
-                <img src={normalizeImageUrl(model.image)} alt={model.title} />
-                <span>{model.number || '01'}</span>
+                <img src={normalizeImageUrl(model.image) || 'https://images.unsplash.com/photo-1556910103-1c02745a872f?q=80&w=800&auto=format&fit=crop'} alt={model.title || 'Kitchen Model'} />
+                <span>{model.number || String(index + 1).padStart(2, '0')}</span>
               </div>
               <div className="collection-copy">
                 <h3>{model.title}</h3>
