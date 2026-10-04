@@ -486,6 +486,15 @@ function ContentTab({ content, setField, updateCollection, updateProject, upload
           <div className="sm:col-span-2">{text('Story body text', content.storyBody, value => setField('storyBody', value), true)}</div>
         </div>
       </div>
+
+      <div className="bg-white p-5 rounded shadow-sm border border-[#eeeae2]">
+        <h3 className="mb-2 font-serif text-2xl">Contact Form Settings</h3>
+        <p className="mb-4 text-xs text-[#6c756e]">Customize the dropdown label and choices customers select on your enquiry form.</p>
+        <div className="space-y-4">
+          {text('Dropdown Question Label', content.formServiceLabel || '', value => setField('formServiceLabel', value))}
+          {text('Dropdown Options (comma separated)', (content.formServiceOptions || []).join(', '), value => setField('formServiceOptions', value.split(',').map(s => s.trim()).filter(Boolean)), true)}
+        </div>
+      </div>
     </section>
   );
 }

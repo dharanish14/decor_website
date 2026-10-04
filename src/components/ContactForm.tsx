@@ -6,7 +6,7 @@ import { PublicSiteContent } from '@/lib/dataStore';
 
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMCwPYLXYQlibvSujWGbB2y-jGfLlD8Tl8-J55kZBAI4L78VDYhwldzJT1z6dAm3wW/exec';
 
-export default function ContactForm() {
+export default function ContactForm({ asModal = false, onClose }: { asModal?: boolean; onClose?: () => void }) {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -96,60 +96,77 @@ export default function ContactForm() {
     setSent(true);
   }
 
-  return (
-    <section className="contact-section" id="contact">
-      <div className="contact-intro">
-        <p className="eyebrow"><span /> Let’s talk about your space</p>
-        <h2>Bring us a<br /><em>window.</em></h2>
-        <p>Tell us what you are imagining. We’ll get back to you to understand the room, share a few directions, and arrange a visit when it feels right.</p>
-        {contactPhone && (
+  const formContent = (
+    <>
+      <div className={asModal ? "mb-6" : "contact-intro"}>
+        {!asModal && <p className="eyebrow"><span /> Let’s talk about your space</p>}
+        {asModal && <div className="flex justify-between items-start">
+          <h2 style={{ fontSize: '24px', margin: 0, fontFamily: '"Playfair Display", serif' }}>Get a Free Estimate</h2>
+          {onClose && <button type="button" onClick={onClose} style={{ fontSize: '20px', background: 'none', border: 'none', cursor: 'pointer' }}>×</button>}
+        </div>}
+        {!asModal && <h2>Bring us a<br /><em>window.</em></h2>}
+        <p style={{ marginTop: asModal ? '8px' : '0', color: asModal ? '#4f5d54' : 'inherit' }}>Tell us what you are imagining. We’ll get back to you to understand the room, share a few directions, and arrange a visit.</p>
+        
+        {!asModal && contactPhone && (
           <p className="mt-4 text-sm font-semibold">
             📞 Call or WhatsApp us: <a href={`tel:${contactPhone.replace(/\s/g, '')}`} className="underline">{contactPhone}</a>
           </p>
         )}
-        <div className="contact-aside">
-          <span>Prefer to browse first?</span>
-          <a href="https://www.instagram.com/elshadai_decors/" target="_blank" rel="noreferrer">See more on Instagram <ArrowUpRight size={15} /></a>
-        </div>
       </div>
-      <div className="contact-form-wrap">
+      <div className={asModal ? "" : "contact-form-wrap"}>
         {sent ? (
-          <div className="form-success">
-            <div><Check /></div>
-            <h3>Thank you for reaching out.</h3>
-            <p>Your enquiry has been saved and forwarded. Connect on WhatsApp for an instant response:</p>
+          <div className="form-success text-center">
+            <div style={{ margin: '0 auto', display: 'inline-flex', width: '40px', height: '40px', borderRadius: '50%', background: '#e9f5ef', color: '#25302c', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}><Check size={20} /></div>
+            <h3 style={{ fontSize: '20px', fontFamily: '"Playfair Display", serif', marginBottom: '12px' }}>Thank you!</h3>
+            <p style={{ color: '#4f5d54' }}>Our team will contact you for further enquiries.<br/><br/>Contact this number: <strong>{contactPhone}</strong></p>
             {waUrl && (
-              <a href={waUrl} target="_blank" rel="noreferrer" className="button" style={{ background: '#25D366', borderColor: '#25D366', color: '#ffffff', display: 'inline-flex', alignItems: 'center', gap: '8px', marginTop: '12px', textDecoration: 'none' }}>
-                <MessageSquare size={16} /> Open WhatsApp Chat ↗
+              <a href={waUrl} target="_blank" rel="noreferrer" className="button" style={{ background: '#25D366', borderColor: '#25D366', color: '#ffffff', display: 'inline-flex', alignItems: 'center', gap: '8px', marginTop: '16px', textDecoration: 'none' }}>
+                <MessageSquare size={16} /> Contact on WhatsApp
               </a>
             )}
-            <button onClick={() => setSent(false)} className="mt-4 block text-xs underline text-[#6c756e]">Send another enquiry</button>
+            {asModal && <button type="button" onClick={onClose} style={{ display: 'block', margin: '20px auto 0', padding: '8px 24px', background: 'var(--ink)', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>}
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
-            <div className="form-row">
-              <label>Name<input required name="name" placeholder="Your name" /></label>
-              <label>Phone<input required name="phone" placeholder="Your number" /></label>
+            <div className={asModal ? "grid gap-3 mb-3" : "form-row"}>
+              <label style={{ display: 'block' }}><span style={{ fontSize: '12px', textTransform: 'uppercase', color: '#6c756e', fontWeight: 'bold' }}>Name</span><input required name="name" placeholder="Your name" style={{ width: '100%', padding: '12px', border: '1px solid #d8d4ca', marginTop: '4px', borderRadius: '4px' }} /></label>
+              <label style={{ display: 'block' }}><span style={{ fontSize: '12px', textTransform: 'uppercase', color: '#6c756e', fontWeight: 'bold' }}>Phone</span><input required name="phone" placeholder="Your number" style={{ width: '100%', padding: '12px', border: '1px solid #d8d4ca', marginTop: '4px', borderRadius: '4px' }} /></label>
             </div>
-            <div className="form-row">
-              <label>Email<input required type="email" name="email" placeholder="you@example.com" /></label>
-              <label>{serviceLabel || 'What are you looking for?'}
-                <select name="service" defaultValue={serviceOptions[0] || 'Curtains'}>
+            <div className={asModal ? "grid gap-3 mb-3" : "form-row"}>
+              <label style={{ display: 'block' }}><span style={{ fontSize: '12px', textTransform: 'uppercase', color: '#6c756e', fontWeight: 'bold' }}>Email</span><input required type="email" name="email" placeholder="you@example.com" style={{ width: '100%', padding: '12px', border: '1px solid #d8d4ca', marginTop: '4px', borderRadius: '4px' }} /></label>
+              <label style={{ display: 'block' }}><span style={{ fontSize: '12px', textTransform: 'uppercase', color: '#6c756e', fontWeight: 'bold' }}>{serviceLabel || 'What are you looking for?'}</span>
+                <select name="service" defaultValue={serviceOptions[0] || 'Curtains'} style={{ width: '100%', padding: '12px', border: '1px solid #d8d4ca', marginTop: '4px', borderRadius: '4px' }}>
                   {serviceOptions.map((opt, i) => (
                     <option key={i} value={opt}>{opt}</option>
                   ))}
                 </select>
               </label>
             </div>
-            <label>Tell us a little about the room<textarea name="message" rows={4} placeholder="What would you like to change?" /></label>
+            <label style={{ display: 'block', marginBottom: '16px' }}><span style={{ fontSize: '12px', textTransform: 'uppercase', color: '#6c756e', fontWeight: 'bold' }}>Tell us a little about the room</span><textarea name="message" rows={asModal ? 3 : 4} placeholder="What would you like to change?" style={{ width: '100%', padding: '12px', border: '1px solid #d8d4ca', marginTop: '4px', borderRadius: '4px' }} /></label>
             {error && <p className="form-error">{error}</p>}
-            <button className="button button-dark" disabled={loading}>
-              {loading ? <LoaderCircle className="spin" size={17} /> : <ArrowUpRight size={17} />}
-              {loading ? 'Sending...' : 'Send enquiry'}
+            <button className="button button-dark" disabled={loading} style={{ width: '100%', justifyContent: 'center' }}>
+              {loading ? <LoaderCircle className="spin" size={17} /> : null}
+              {loading ? 'Sending...' : 'Submit Enquiry'}
             </button>
           </form>
         )}
       </div>
+    </>
+  );
+
+  if (asModal) {
+    return (
+      <div className="cms-modal-overlay" style={{ zIndex: 10000 }}>
+        <div className="cms-modal" style={{ background: '#fff', maxWidth: '500px' }}>
+          {formContent}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <section className="contact-section" id="contact">
+      {formContent}
     </section>
   );
 }

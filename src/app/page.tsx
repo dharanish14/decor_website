@@ -7,6 +7,7 @@ import { INITIAL_PUBLIC_CONTENT, normalizeImageUrl, PublicSiteContent } from '@/
 
 export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [enquiryOpen, setEnquiryOpen] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
   const [content, setContent] = useState<PublicSiteContent>(INITIAL_PUBLIC_CONTENT);
 
@@ -131,15 +132,15 @@ export default function HomePage() {
       </section>
 
       <div className="floating-actions">
-        <a href="#contact" className="enquiry-float" aria-label="Enquire Now">
+        <button onClick={() => setEnquiryOpen(true)} className="enquiry-float" aria-label="Enquire Now" style={{ cursor: 'pointer', border: 'none' }}>
           <span>Enquiry</span>
-        </a>
+        </button>
         <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer" className="whatsapp-float" aria-label="Chat on WhatsApp">
           <MessageCircle size={24} />
         </a>
       </div>
 
-      <ContactForm /><footer className="site-footer"><div className="footer-brand"><span className="brand-mark">E</span><span><strong>{content.brandName}</strong><small>{content.brandDescriptor}</small></span></div><p>Window treatments, upholstery, and considered home furnishings in Chennai.{content.contactPhone && <> · 📞 <a href={`tel:${content.contactPhone.replace(/\s/g, '')}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{content.contactPhone}</a></>}</p><div className="footer-links"><a href={content.instagramUrl} target="_blank" rel="noreferrer"><Instagram size={16} /> Instagram</a><a href="#contact">Enquire</a><span>© {new Date().getFullYear()} Elshadai Decors</span></div></footer>
+      <ContactForm />{enquiryOpen && <ContactForm asModal={true} onClose={() => setEnquiryOpen(false)} />}<footer className="site-footer"><div className="footer-brand"><span className="brand-mark">E</span><span><strong>{content.brandName}</strong><small>{content.brandDescriptor}</small></span></div><p>Window treatments, upholstery, and considered home furnishings in Chennai.{content.contactPhone && <> · 📞 <a href={`tel:${content.contactPhone.replace(/\s/g, '')}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{content.contactPhone}</a></>}</p><div className="footer-links"><a href={content.instagramUrl} target="_blank" rel="noreferrer"><Instagram size={16} /> Instagram</a><a href="#contact">Enquire</a><span>© {new Date().getFullYear()} Elshadai Decors</span></div></footer>
     </main>
   );
 }
