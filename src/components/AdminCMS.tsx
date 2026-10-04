@@ -488,7 +488,9 @@ function ContentTab({ content, setField, updateCollection, updateProject, upload
       </div>
     </section>
   );
-}\n\nfunction SettingsTab({ content, setField }: { content: PublicSiteContent; setField: <K extends keyof PublicSiteContent>(key: K, value: PublicSiteContent[K]) => void }) {
+}
+
+function SettingsTab({ content, setField }: { content: PublicSiteContent; setField: <K extends keyof PublicSiteContent>(key: K, value: PublicSiteContent[K]) => void }) {
   const text = (label: string, value: string, onChange: (value: string) => void, area = false, type = 'text') => (
     <label className="block text-xs font-bold uppercase tracking-wider text-[#6c756e]">
       {label}
